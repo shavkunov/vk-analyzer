@@ -1,7 +1,7 @@
 package ru.spbau.shavkunov.primitives;
 
 import org.jetbrains.annotations.NotNull;
-import ru.spbau.shavkunov.Users.User;
+import ru.spbau.shavkunov.users.User;
 
 import java.util.List;
 import java.util.Map;
@@ -10,24 +10,34 @@ import java.util.Map;
  * Created by Mikhail Shavkunov
  */
 public class Statistics {
+    // TODO : add global constants
     private double averageLikes;
     private double averageReposts;
-    // private double averageViews;?
-    private @NotNull Post worseLikesPost;
+    private double averageViews;
+
     private @NotNull Post bestLikesPost;
-    private @NotNull Post worseRepostsPost;
     private @NotNull Post bestRepostsPost;
+    private @NotNull Post bestViewsPost;
+
+    private @NotNull Post worseLikesPost;
+    private @NotNull Post worseRepostsPost;
+    private @NotNull Post worseViewsPost;
 
     public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects) {
         countAverageLikes(jsonObjects);
         countAverageReposts(jsonObjects);
-        worseLikesPost = getWorseLikesPost(owner, jsonObjects);
-        bestLikesPost = getBestLikesPost(owner, jsonObjects);
-        worseRepostsPost = getWorseRepostsPost(owner, jsonObjects);
+        countAverageViews(jsonObjects);
+
         bestRepostsPost = getBestRepostsPost(owner, jsonObjects);
+        bestLikesPost = getBestLikesPost(owner, jsonObjects);
+        bestViewsPost = getBestViewsPost(owner, jsonObjects);
+
+        worseLikesPost = getWorseLikesPost(owner, jsonObjects);
+        worseRepostsPost = getWorseRepostsPost(owner, jsonObjects);
+        worseViewsPost = getWorseViewsPost(owner, jsonObjects);
     }
 
-    private Post findQuantityPost(@NotNull String identifier, @NotNull User owner,
+    private @NotNull Post findQuantityPost(@NotNull String identifier, @NotNull User owner,
                                   @NotNull String quantity, @NotNull List<Map> jsonObjects) {
 
         int compareUnit = 1;
@@ -43,32 +53,36 @@ public class Statistics {
         return new Post(owner, jsonPost);
     }
 
-    private Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getBestViewsPost(@NotNull User owner, @NotNull List<Map> json) {
+        return findQuantityPost("best", owner, "views", json);
+    }
+
+    private @NotNull Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) {
         return findQuantityPost("worse", owner, "likes", json);
     }
 
-    private Post getBestLikesPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getWorseViewsPost(@NotNull User owner, @NotNull List<Map> json) {
+        return findQuantityPost("worse", owner, "views", json);
+    }
+
+    private @NotNull Post getBestLikesPost(@NotNull User owner, @NotNull List<Map> json) {
         return findQuantityPost("best", owner, "likes", json);
     }
 
-    private Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
         return findQuantityPost("worse", owner, "reposts", json);
     }
 
-    private Post getBestRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getBestRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
         return findQuantityPost("best", owner, "reposts", json);
     }
 
-    private Post getWorsePost(@NotNull User owner, @NotNull String quantity, @NotNull List<Map> json) {
-        return findQuantityPost("worse", owner, quantity, json);
-    }
-
-    private Post getBestPost(@NotNull User owner, @NotNull String quantity, @NotNull List<Map> json) {
-        return findQuantityPost("best", owner, quantity, json);
-    }
-
-    private Integer getQuantityCount(@NotNull String quantity, @NotNull Map json) {
+    private @NotNull Integer getQuantityCount(@NotNull String quantity, @NotNull Map json) {
         return (Integer) ((Map) json.get(quantity)).get("count");
+    }
+
+    private void countAverageViews(@NotNull List<Map> jsonObjects) {
+        averageViews = countAverageQuantity("views", jsonObjects);
     }
 
     private void countAverageLikes(@NotNull List<Map> jsonObjects) {
@@ -87,6 +101,10 @@ public class Statistics {
                           .getAsDouble();
     }
 
+    public double getAverageViews() {
+        return averageViews;
+    }
+
     public double getAverageLikes() {
         return averageLikes;
     }
@@ -95,19 +113,27 @@ public class Statistics {
         return averageReposts;
     }
 
-    public Post getWorseLikesPost() {
+    public @NotNull Post getWorseLikesPost() {
         return worseLikesPost;
     }
 
-    public Post getBestLikesPost() {
+    public @NotNull Post getBestLikesPost() {
         return bestLikesPost;
     }
 
-    public Post getWorseRepostsPost() {
+    public @NotNull Post getWorseRepostsPost() {
         return worseRepostsPost;
     }
 
-    public Post getBestRepostsPost() {
+    public @NotNull Post getBestRepostsPost() {
         return bestRepostsPost;
+    }
+
+    public @NotNull Post getBestViewsPost() {
+        return bestViewsPost;
+    }
+
+    public @NotNull Post getWorseViewsPost() {
+        return worseViewsPost;
     }
 }

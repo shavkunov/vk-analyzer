@@ -2,7 +2,7 @@ package ru.spbau.shavkunov.primitives;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.spbau.shavkunov.Users.User;
+import ru.spbau.shavkunov.users.User;
 
 import java.util.List;
 import java.util.Map;
