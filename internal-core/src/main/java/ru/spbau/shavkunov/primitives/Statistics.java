@@ -16,6 +16,7 @@ public class Statistics {
 
     @Id
     private @Nullable String id;
+
     private double averageLikes;
     private double averageReposts;
     private double averageViews;

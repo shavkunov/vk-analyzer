@@ -4,16 +4,22 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.spbau.shavkunov.users.User;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @Entity
 public class Post {
+    @Id
     private @Nullable String id;
+
     private @NotNull String text;
     private @Nullable String defaultImage;
+
+    @ElementCollection(targetClass=String.class)
     private @Nullable List<String> images;
 
     public Post(@NotNull User owner, @NotNull Map json) {
