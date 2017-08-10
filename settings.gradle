@@ -1,3 +1,0 @@
-rootProject.name = 'vk-wall-analyzer'
-include 'internal-core'
-include 'spring-app'
