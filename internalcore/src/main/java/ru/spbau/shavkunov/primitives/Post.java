@@ -16,6 +16,8 @@ public class Post {
     @Id
     private @Nullable String id;
 
+    // save some other statistics to show user
+    // but in db it can be saved only id of the post.
     private @NotNull String text;
     private @Nullable String defaultImage;
 
@@ -34,22 +36,36 @@ public class Post {
     }
 
     private @NotNull List<String> getAttachedImageURLs(@NotNull Map json) {
-        Map<String, Map> attach = (Map<String, Map>) json.get("attachments");
-        return attach.entrySet()
-                .stream()
-                .filter(entry -> entry.getValue()
-                        .get("type") == "photo")
-                .map(entry -> entry.getValue())
-                .map(map -> (String) map.get("src"))
+        List<Map> attach = (List) json.get("attachments");
+
+        return attach.stream()
+                // TODO : handle photo request
+                .filter(map -> map.get("type").equals("photo"))
+                .map(map -> (Map) map.get("photo"))
+                .map(map -> (String) map.get("photo_130"))
                 .collect(Collectors.toList());
     }
 
     private long countPhotoAttachments(@NotNull Map json) {
-        Map<String, Map> attach = (Map<String, Map>) json.get("attachments");
-        return attach.entrySet()
-                     .stream()
-                     .filter(entry -> entry.getValue()
-                                           .get("type") == "photo")
+        List<Map> attach = (List) json.get("attachments");
+        return attach.stream()
+                     .filter(map -> map.get("type").equals("photo"))
                      .count();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public String getDefaultImage() {
+        return defaultImage;
+    }
+
+    public List<String> getImages() {
+        return images;
     }
 }

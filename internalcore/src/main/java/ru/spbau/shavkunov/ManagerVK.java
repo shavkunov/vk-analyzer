@@ -12,7 +12,10 @@ import ru.spbau.shavkunov.network.Method;
 import ru.spbau.shavkunov.network.Parameter;
 import ru.spbau.shavkunov.primitives.Statistics;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -57,12 +60,11 @@ public class ManagerVK {
         HttpURLConnection connection = (HttpURLConnection) postsRequest.openConnection();
 
         ObjectMapper mapper = JsonFactory.create();
-        Map response = mapper.fromJson(connection.getInputStream(), Map.class);
+        Map response = mapper.fromJson(getJsonAsString(connection.getInputStream()), Map.class);
         if (response.containsKey("response")) {
-            List<Map> objects = (List<Map>) response.get("response");
-            objects.remove(0); // first one always total count
-
-            return new Statistics(user, objects);
+            Map objects = (Map) response.get("response");
+            // first one always total count
+            return new Statistics(user, (List<Map>) objects.get("items"));
         }
 
         throw new BadJsonResponseException();
@@ -77,11 +79,11 @@ public class ManagerVK {
         ObjectMapper mapper = JsonFactory.create();
         Map groupResponse = mapper.fromJson(connection.getInputStream(), Map.class);
         if (groupResponse.containsKey("response")) {
-            Map information = (Map) groupResponse.get("response");
-            String groupID = (String) information.get("gid");
+            Map information = (Map) ((List) groupResponse.get("response")).get(0);
+            Integer groupID = (Integer) information.get("id");
             String groupName = (String) information.get("name");
-            String photoURL = (String) information.get("photo");
-            return new Group(groupName, groupID, new URL(photoURL));
+            String photoURL = (String) information.get("photo_100");
+            return new Group(groupName, groupID.toString(), new URL(photoURL));
         }
 
         URL isUserRequest = getRequestUrl(USERS_GET,
@@ -90,12 +92,12 @@ public class ManagerVK {
         connection = (HttpURLConnection) isUserRequest.openConnection();
         Map userResponse = mapper.fromJson(connection.getInputStream(), Map.class);
         if (userResponse.containsKey("response")) {
-            Map information = (Map) userResponse.get("response");
-            String userID = (String) information.get("uid");
+            Map information = (Map) ((List) userResponse.get("response")).get(0);
+            Integer userID = (Integer) information.get("uid");
             String firstName = (String) information.get("first_name");
             String lastName = (String) information.get("last_name");
             String photoURL = (String) information.get("photo_400_orig");
-            return new Person(firstName, lastName, userID, new URL(photoURL));
+            return new Person(firstName, lastName, userID.toString(), new URL(photoURL));
         }
 
         throw new BadJsonResponseException();
@@ -110,9 +112,19 @@ public class ManagerVK {
             request += parameter.getName() + "=" + parameter.getValue() + "&";
         }
 
-        //remove last '&'
-        request = request.substring(0, request.length() - 1);
+        request += "v=5.67";// specify version
 
         return new URL(request);
+    }
+
+    // TODO : it's temporary. Something gone wrong with parsing directly from boon.
+    // maybe it's useful to convert input stream to utt-8
+    private @NotNull String getJsonAsString(@NotNull InputStream inputStream) throws IOException {
+        BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+        StringBuilder responseStrBuilder = new StringBuilder();
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+            responseStrBuilder.append(inputStr);
+        return responseStrBuilder.toString();
     }
 }

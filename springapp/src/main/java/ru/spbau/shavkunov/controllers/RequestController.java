@@ -18,10 +18,11 @@ public class RequestController {
     private @NotNull DataRepository repository;
 
     @RequestMapping("/link={pageLink}&posts={postsAmount}")
-    public @NotNull Statistics getStatistics(@PathVariable @NotNull String pageLink, @PathVariable int posts)
+    public @NotNull Statistics getStatistics(@PathVariable @NotNull String pageLink, @PathVariable int postsAmount)
             throws InvalidAmountException, BadJsonResponseException, IOException {
         // TODO : replace with static call
-        ManagerVK vk = new ManagerVK(pageLink, posts);
+        ManagerVK vk = new ManagerVK(pageLink, postsAmount);
+
         return vk.getStatistics();
     }
 

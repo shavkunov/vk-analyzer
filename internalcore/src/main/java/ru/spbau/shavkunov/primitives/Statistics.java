@@ -7,11 +7,12 @@ import ru.spbau.shavkunov.users.User;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Entity
-public class Statistics {
+public class Statistics implements Serializable {
     // TODO : add global constants
 
     @Id
@@ -112,7 +113,8 @@ public class Statistics {
     private double countAverageQuantity(@NotNull String quantity, @NotNull List<Map> jsonObjects) {
         return jsonObjects.stream()
                           .map(map -> (Map) map.get(quantity))
-                          .mapToDouble(map -> (Double) map.get("count"))
+                          .mapToInt(map -> (Integer) map.get("count"))
+                          .mapToDouble(input -> (double) input)
                           .average()
                           .getAsDouble();
     }
@@ -151,5 +153,9 @@ public class Statistics {
 
     public @NotNull Post getWorseViewsPost() {
         return worseViewsPost;
+    }
+
+    public String getId() {
+        return id;
     }
 }
