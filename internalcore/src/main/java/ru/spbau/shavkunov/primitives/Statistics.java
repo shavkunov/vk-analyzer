@@ -17,6 +17,9 @@ import static ru.spbau.shavkunov.primitives.PostQuantity.LIKES;
 import static ru.spbau.shavkunov.primitives.PostQuantity.REPOSTS;
 import static ru.spbau.shavkunov.primitives.PostQuantity.VIEWS;
 
+/**
+ * Statistics contains analyzed information about given amount last posts of given user.
+ */
 @Entity
 public class Statistics implements Serializable {
     @Id
@@ -44,7 +47,10 @@ public class Statistics implements Serializable {
     @OneToOne
     private @NotNull Post worseViewsPost;
 
-    public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects) {
+    private @NotNull User owner;
+    private int amount;
+
+    public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects, int amount) {
         countAverageLikes(jsonObjects);
         countAverageReposts(jsonObjects);
         countAverageViews(jsonObjects);
@@ -56,6 +62,8 @@ public class Statistics implements Serializable {
         worseLikesPost = getWorseLikesPost(owner, jsonObjects);
         worseRepostsPost = getWorseRepostsPost(owner, jsonObjects);
         worseViewsPost = getWorseViewsPost(owner, jsonObjects);
+        this.owner = owner;
+        this.amount = amount;
     }
 
     private @NotNull Post findQuantityPost(@NotNull PostIdentity identifier, @NotNull User owner,

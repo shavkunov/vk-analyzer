@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URL;
 
 /**
- * Created by Mikhail Shavkunov
+ * A community wrap.
+ * See https://vk.com/dev/fields_groups.
  */
 public class Group extends User {
     public Group(@NotNull String name, @NotNull String ID, @NotNull URL photoURL) {

@@ -25,13 +25,16 @@ import java.util.Map;
 import static ru.spbau.shavkunov.Constants.SERVICE_TOKEN;
 import static ru.spbau.shavkunov.network.Method.*;
 
+/**
+ * Manager collects appropriate data and give statistics about user wall.
+ */
 public class ManagerVK {
     /**
      * ID of the user or community of vk.com
      */
     private @NotNull String ID;
 
-    private @NotNull String amount;
+    private @NotNull int amount;
 
     /**
      * @param ID -- ID of given user or community
@@ -44,7 +47,6 @@ public class ManagerVK {
             throw new InvalidAmountException();
         }
 
-        this.amount = String.valueOf(amount);
         this.ID = ID;
     }
 
@@ -55,7 +57,7 @@ public class ManagerVK {
         User user = identify();
         URL postsRequest = getRequestUrl(WALL_GET,
                 new Parameter("owner_id", String.valueOf(user.getID())),
-                new Parameter("count", amount),
+                new Parameter("count", String.valueOf(amount)),
                 new Parameter("access_token", SERVICE_TOKEN));
         HttpURLConnection connection = (HttpURLConnection) postsRequest.openConnection();
 
@@ -64,7 +66,7 @@ public class ManagerVK {
         if (response.containsKey("response")) {
             Map objects = (Map) response.get("response");
             // first one always total count
-            return new Statistics(user, (List<Map>) objects.get("items"));
+            return new Statistics(user, (List<Map>) objects.get("items"), amount);
         }
 
         throw new BadJsonResponseException();

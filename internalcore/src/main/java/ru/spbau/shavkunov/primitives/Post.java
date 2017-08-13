@@ -15,6 +15,10 @@ import static ru.spbau.shavkunov.primitives.PostQuantity.LIKES;
 import static ru.spbau.shavkunov.primitives.PostQuantity.REPOSTS;
 import static ru.spbau.shavkunov.primitives.PostQuantity.VIEWS;
 
+/**
+ * Class describes information of vk post. (see https://vk.com/dev/post).
+ * These properties will be saved in database.
+ */
 @Entity
 public class Post {
     @Id
@@ -23,7 +27,6 @@ public class Post {
     // save some other statistics to show user
     private @NotNull String text;
     private @Nullable String defaultImage;
-    private @NotNull User owner;
     private @NotNull String description;
     private int likes;
     private int reposts;
@@ -43,7 +46,6 @@ public class Post {
             return;
         }
 
-        this.owner = owner;
         description = category.toString();
         images = getAttachedImageURLs(json);
     }

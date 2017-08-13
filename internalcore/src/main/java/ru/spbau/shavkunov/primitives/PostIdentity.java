@@ -1,7 +1,7 @@
 package ru.spbau.shavkunov.primitives;
 
 /**
- * Created by Mikhail Shavkunov
+ * Post best or worst identity.
  */
 public enum PostIdentity {
     BEST,

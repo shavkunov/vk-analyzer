@@ -3,7 +3,7 @@ package ru.spbau.shavkunov.primitives;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Mikhail Shavkunov
+ * Quantity describes parameter of the post.
  */
 public enum PostQuantity {
     VIEWS("views"),

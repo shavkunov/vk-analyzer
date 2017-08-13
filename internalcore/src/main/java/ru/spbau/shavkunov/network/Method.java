@@ -3,7 +3,7 @@ package ru.spbau.shavkunov.network;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Mikhail Shavkunov
+ * Enum describes the type of the method which will be used to get vk wall information.
  */
 public enum Method {
     GROUP_GET_BY_ID("groups.getById"),

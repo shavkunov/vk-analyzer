@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import java.net.URL;
 
 /**
- * Created by Mikhail Shavkunov
+ * A person wrap.
+ * See https://vk.com/dev/fields.
  */
 public class Person extends User {
     private @NotNull String surname;

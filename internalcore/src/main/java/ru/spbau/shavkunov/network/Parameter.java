@@ -3,7 +3,7 @@ package ru.spbau.shavkunov.network;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Mikhail Shavkunov
+ * Parameter describes parameter of http request.
  */
 public class Parameter {
     private @NotNull String name;

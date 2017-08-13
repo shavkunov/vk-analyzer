@@ -5,7 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import static ru.spbau.shavkunov.primitives.PostIdentity.BEST;
 
 /**
- * Created by Mikhail Shavkunov
+ * Enum describes category of the post. There three parameters: likes, reposts, views.
+ * The worst/best posts are needed.
  */
 public enum PostCategory {
     BEST_LIKED("The most liked post"),
