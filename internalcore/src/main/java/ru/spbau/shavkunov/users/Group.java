@@ -2,12 +2,14 @@ package ru.spbau.shavkunov.users;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.persistence.Entity;
 import java.net.URL;
 
 /**
  * A community wrap.
  * See https://vk.com/dev/fields_groups.
  */
+@Entity
 public class Group extends User {
     public Group(@NotNull String name, @NotNull String ID, @NotNull URL photoURL) {
         this.photo = photoURL;

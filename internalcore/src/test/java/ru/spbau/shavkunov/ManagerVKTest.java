@@ -5,24 +5,26 @@ import org.boon.json.ObjectMapper;
 import org.junit.Test;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
+import ru.spbau.shavkunov.primitives.Post;
 import ru.spbau.shavkunov.primitives.Statistics;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ManagerVKTest {
-    @Test
+    //@Test
     @SuppressWarnings("unchecked")
     public void rightResponseTest() throws InvalidAmountException, IOException, URISyntaxException {
         ManagerVK manager = new ManagerVK("alfabang", 10);
         //System.out.println(new MapPrinter<>(manager.identify()));
     }
 
-    @Test
+    //@Test
     public void isGroupRequestTest() throws IOException {
         URL isGroupRequest = new URL("https://api.vk.com/method/groups.getById?group_id=alfabank&v=5.57");
         HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
@@ -38,14 +40,32 @@ public class ManagerVKTest {
         URL urlExample = new URL(url);
     }
 
-    @Test
+    //@Test
     public void getStatsTest() throws IOException, InvalidAmountException, BadJsonResponseException {
         String url = "https://api.vk.com/method/wall.get?owner_id=-23242408&" +
                      "count=20&" +
                      "access_token=d2872404d2872404d28724049dd2da8487dd287d28724048b042815868fa71cc8fc8992&" +
-                     "v=5.57";
+                     "v=5.67";
 
         ManagerVK vk = new ManagerVK("alfabank", 20);
         Statistics stats = vk.getStatistics();
+    }
+
+    @Test
+    public void testPostDescription() throws BadJsonResponseException, IOException, InvalidAmountException {
+        ManagerVK vk = new ManagerVK("alfabank", 20);
+        Statistics stats = vk.getStatistics();
+
+        List<Post> posts = new ArrayList();
+        posts.add(stats.getBestLikesPost());
+        posts.add(stats.getBestRepostsPost());
+        posts.add(stats.getBestViewsPost());
+
+        posts.add(stats.getWorseLikesPost());
+        posts.add(stats.getWorseRepostsPost());
+        posts.add(stats.getWorseViewsPost());
+
+        stats.getBestLikesPost().getDescription();
+        //posts.stream().forEach(post -> System.out.println(post.getDescription()));
     }
 }

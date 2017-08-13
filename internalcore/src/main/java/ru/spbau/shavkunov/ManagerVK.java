@@ -48,6 +48,7 @@ public class ManagerVK {
         }
 
         this.ID = ID;
+        this.amount = amount;
     }
 
     // These two methods: getStatistics and identify don't check whether there are some problems with connection.

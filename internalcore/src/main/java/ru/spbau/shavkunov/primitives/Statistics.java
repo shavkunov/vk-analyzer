@@ -13,9 +13,7 @@ import java.util.Map;
 
 import static ru.spbau.shavkunov.primitives.PostIdentity.BEST;
 import static ru.spbau.shavkunov.primitives.PostIdentity.WORST;
-import static ru.spbau.shavkunov.primitives.PostQuantity.LIKES;
-import static ru.spbau.shavkunov.primitives.PostQuantity.REPOSTS;
-import static ru.spbau.shavkunov.primitives.PostQuantity.VIEWS;
+import static ru.spbau.shavkunov.primitives.PostQuantity.*;
 
 /**
  * Statistics contains analyzed information about given amount last posts of given user.
@@ -47,6 +45,7 @@ public class Statistics implements Serializable {
     @OneToOne
     private @NotNull Post worseViewsPost;
 
+    @OneToOne
     private @NotNull User owner;
     private int amount;
 
@@ -168,7 +167,11 @@ public class Statistics implements Serializable {
         return worseViewsPost;
     }
 
-    public String getId() {
-        return id;
+    public User getOwner() {
+        return owner;
+    }
+
+    public int getAmount() {
+        return amount;
     }
 }

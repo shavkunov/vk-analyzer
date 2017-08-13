@@ -2,12 +2,14 @@ package ru.spbau.shavkunov.users;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.persistence.Entity;
 import java.net.URL;
 
 /**
  * A person wrap.
  * See https://vk.com/dev/fields.
  */
+@Entity
 public class Person extends User {
     private @NotNull String surname;
 
@@ -16,6 +18,10 @@ public class Person extends User {
         this.surname = surname;
         this.ID = ID;
         this.photo = url;
+    }
+
+    public String getSurname() {
+        return surname;
     }
 
     @Override

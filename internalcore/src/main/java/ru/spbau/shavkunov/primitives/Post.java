@@ -37,16 +37,16 @@ public class Post {
 
     public Post(@NotNull User owner, @NotNull Map json, @NotNull PostCategory category) {
         text = (String) json.get("text");
-        likes = (int) json.get(LIKES.toString());
-        reposts = (int) json.get(REPOSTS.toString());
-        views = (int) json.get(VIEWS.toString());
+        likes = (int) ((Map) json.get(LIKES.toString())).get("count");
+        reposts = (int) ((Map) json.get(REPOSTS.toString())).get("count");
+        views = (int) ((Map) json.get(VIEWS.toString())).get("count");
+        description = category.toString();
 
         if (countPhotoAttachments(json) == 0) {
             defaultImage = owner.getPhoto().toString();
             return;
         }
 
-        description = category.toString();
         images = getAttachedImageURLs(json);
     }
 
@@ -68,19 +68,31 @@ public class Post {
                      .count();
     }
 
-    public String getId() {
-        return id;
+    public @NotNull String getDescription() {
+        return description;
     }
 
-    public String getText() {
+    public int getLikes() {
+        return likes;
+    }
+
+    public int getReposts() {
+        return reposts;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public @NotNull String getText() {
         return text;
     }
 
-    public String getDefaultImage() {
+    public @NotNull String getDefaultImage() {
         return defaultImage;
     }
 
-    public List<String> getImages() {
+    public @NotNull List<String> getImages() {
         return images;
     }
 }

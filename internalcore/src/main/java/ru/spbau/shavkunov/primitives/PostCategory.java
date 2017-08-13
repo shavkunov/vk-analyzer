@@ -32,12 +32,12 @@ public enum PostCategory {
         }
 
         switch (quantity) {
+            case VIEWS:
+                return WORST_VIEWS;
             case LIKES:
                 return WORST_LIKED;
             case REPOSTS:
                 return WORST_REPOSTS;
-            case VIEWS:
-                return WORST_VIEWS;
         }
 
         // don't need
