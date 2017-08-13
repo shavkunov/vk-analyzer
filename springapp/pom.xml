@@ -33,6 +33,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+
     </dependencies>
 
     <modelVersion>4.0.0</modelVersion>
@@ -72,19 +78,29 @@
                         </goals>
                         <configuration>
                             <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>npm install material-ui</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
                             <arguments>install material-ui</arguments>
                         </configuration>
-
                     </execution>
+
                     <execution>
-                        <id>webpack build</id>
+                        <id>npm install jquery</id>
                         <goals>
-                            <goal>webpack</goal>
+                            <goal>npm</goal>
                         </goals>
+                        <configuration>
+                            <arguments>install jquery</arguments>
+                        </configuration>
                     </execution>
 
-                    <execution>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
