@@ -11,6 +11,9 @@ import ru.spbau.shavkunov.services.DataRepository;
 
 import java.io.IOException;
 
+/**
+ * Class which handles client requests.
+ */
 @RestController
 public class RequestController {
 
