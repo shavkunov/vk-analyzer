@@ -7,6 +7,7 @@ import ru.spbau.shavkunov.users.User;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,7 +27,6 @@ public class Post {
 
     // save some other statistics to show user
     private @NotNull String text;
-    private @Nullable String defaultImage;
     private @NotNull String description;
     private @NotNull String postLink;
     private int likes;
@@ -45,7 +45,8 @@ public class Post {
         postLink = getPostLink(owner, json);
 
         if (countPhotoAttachments(json) == 0) {
-            defaultImage = owner.getPhoto().toString();
+            images = new ArrayList<>();
+            images.add(owner.getPhoto().toString());
             return;
         }
 
@@ -100,10 +101,6 @@ public class Post {
 
     public @NotNull String getText() {
         return text;
-    }
-
-    public @NotNull String getDefaultImage() {
-        return defaultImage;
     }
 
     public @NotNull List<String> getImages() {
