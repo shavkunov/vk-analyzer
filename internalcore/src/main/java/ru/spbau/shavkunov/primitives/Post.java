@@ -17,14 +17,15 @@ public class Post {
     private @Nullable String id;
 
     // save some other statistics to show user
-    // but in db it can be saved only id of the post.
     private @NotNull String text;
     private @Nullable String defaultImage;
+    private @NotNull User owner;
+    private @NotNull String description;
 
     @ElementCollection(targetClass=String.class)
     private @Nullable List<String> images;
 
-    public Post(@NotNull User owner, @NotNull Map json) {
+    public Post(@NotNull User owner, @NotNull Map json, @NotNull PostCategory category) {
         text = (String) json.get("text");
 
         if (countPhotoAttachments(json) == 0) {
@@ -32,6 +33,8 @@ public class Post {
             return;
         }
 
+        this.owner = owner;
+        description = category.toString();
         images = getAttachedImageURLs(json);
     }
 

@@ -11,10 +11,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import static ru.spbau.shavkunov.primitives.PostIdentity.BEST;
+import static ru.spbau.shavkunov.primitives.PostIdentity.WORST;
+import static ru.spbau.shavkunov.primitives.PostQuantity.LIKES;
+import static ru.spbau.shavkunov.primitives.PostQuantity.REPOSTS;
+import static ru.spbau.shavkunov.primitives.PostQuantity.VIEWS;
+
 @Entity
 public class Statistics implements Serializable {
-    // TODO : add global constants
-
     @Id
     private @Nullable String id;
 
@@ -54,11 +58,11 @@ public class Statistics implements Serializable {
         worseViewsPost = getWorseViewsPost(owner, jsonObjects);
     }
 
-    private @NotNull Post findQuantityPost(@NotNull String identifier, @NotNull User owner,
-                                  @NotNull String quantity, @NotNull List<Map> jsonObjects) {
+    private @NotNull Post findQuantityPost(@NotNull PostIdentity identifier, @NotNull User owner,
+                                  @NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
 
         int compareUnit = 1;
-        if (identifier.equals("worse")) {
+        if (identifier == WORST) {
             compareUnit = -1;
         }
         int finalCompareUnit = compareUnit;
@@ -67,52 +71,53 @@ public class Statistics implements Serializable {
                                                                              getQuantityCount(quantity, json2))))
                                   .get();
 
-        return new Post(owner, jsonPost);
+        PostCategory category = PostCategory.getCategory(identifier, quantity);
+        return new Post(owner, jsonPost, category);
     }
 
     private @NotNull Post getBestViewsPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("best", owner, "views", json);
-    }
-
-    private @NotNull Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("worse", owner, "likes", json);
-    }
-
-    private @NotNull Post getWorseViewsPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("worse", owner, "views", json);
+        return findQuantityPost(BEST, owner, VIEWS, json);
     }
 
     private @NotNull Post getBestLikesPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("best", owner, "likes", json);
-    }
-
-    private @NotNull Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("worse", owner, "reposts", json);
+        return findQuantityPost(BEST, owner, LIKES, json);
     }
 
     private @NotNull Post getBestRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
-        return findQuantityPost("best", owner, "reposts", json);
+        return findQuantityPost(BEST, owner, REPOSTS, json);
     }
 
-    private @NotNull Integer getQuantityCount(@NotNull String quantity, @NotNull Map json) {
-        return (Integer) ((Map) json.get(quantity)).get("count");
+    private @NotNull Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) {
+        return findQuantityPost(WORST, owner, LIKES, json);
+    }
+
+    private @NotNull Post getWorseViewsPost(@NotNull User owner, @NotNull List<Map> json) {
+        return findQuantityPost(WORST, owner, VIEWS, json);
+    }
+
+    private @NotNull Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
+        return findQuantityPost(WORST, owner, REPOSTS, json);
+    }
+
+    private @NotNull Integer getQuantityCount(@NotNull PostQuantity quantity, @NotNull Map json) {
+        return (Integer) ((Map) json.get(quantity.toString())).get("count");
     }
 
     private void countAverageViews(@NotNull List<Map> jsonObjects) {
-        averageViews = countAverageQuantity("views", jsonObjects);
+        averageViews = countAverageQuantity(VIEWS, jsonObjects);
     }
 
     private void countAverageLikes(@NotNull List<Map> jsonObjects) {
-        averageLikes = countAverageQuantity("likes", jsonObjects);
+        averageLikes = countAverageQuantity(LIKES, jsonObjects);
     }
 
     private void countAverageReposts(@NotNull List<Map> jsonObjects) {
-        averageReposts = countAverageQuantity("reposts", jsonObjects);
+        averageReposts = countAverageQuantity(REPOSTS, jsonObjects);
     }
 
-    private double countAverageQuantity(@NotNull String quantity, @NotNull List<Map> jsonObjects) {
+    private double countAverageQuantity(@NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
         return jsonObjects.stream()
-                          .map(map -> (Map) map.get(quantity))
+                          .map(map -> (Map) map.get(quantity.toString()))
                           .mapToInt(map -> (Integer) map.get("count"))
                           .mapToDouble(input -> (double) input)
                           .average()
