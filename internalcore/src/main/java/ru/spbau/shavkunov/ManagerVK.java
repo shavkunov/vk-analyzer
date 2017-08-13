@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.spbau.shavkunov.Constants.SERVICE_TOKEN;
+import static ru.spbau.shavkunov.Constants.VK_PREFIX;
 import static ru.spbau.shavkunov.network.Method.*;
 
 /**
@@ -30,24 +31,23 @@ import static ru.spbau.shavkunov.network.Method.*;
  */
 public class ManagerVK {
     /**
-     * ID of the user or community of vk.com
+     * userID of the user or community of vk.com
      */
-    private @NotNull String ID;
-
+    private @NotNull String userID;
     private @NotNull int amount;
 
     /**
-     * @param ID -- ID of given user or community
+     * @param userID -- userID of given user or community
      * @param amount -- amount of posts to analyze.
      * It should satisfy a condition: amount at least 10, but not no more then 80.
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
-    public ManagerVK(@NotNull String ID, int amount) throws InvalidAmountException {
+    public ManagerVK(@NotNull String userID, int amount) throws InvalidAmountException {
         if (amount < 10 || amount > 80) {
             throw new InvalidAmountException();
         }
 
-        this.ID = ID;
+        this.userID = userID;
         this.amount = amount;
     }
 
@@ -76,7 +76,7 @@ public class ManagerVK {
     public @NotNull User identify() throws BadJsonResponseException, IOException {
         // TODO : twice written the same thing, need to change
         URL isGroupRequest = getRequestUrl(GROUP_GET_BY_ID,
-                                            new Parameter("group_id", ID));
+                                            new Parameter("group_id", userID));
         HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
 
         ObjectMapper mapper = JsonFactory.create();
@@ -86,11 +86,12 @@ public class ManagerVK {
             Integer groupID = (Integer) information.get("id");
             String groupName = (String) information.get("name");
             String photoURL = (String) information.get("photo_100");
-            return new Group(groupName, groupID.toString(), new URL(photoURL));
+            String userLink = VK_PREFIX + userID;
+            return new Group(groupName, groupID.toString(), new URL(photoURL), userLink);
         }
 
         URL isUserRequest = getRequestUrl(USERS_GET,
-                                            new Parameter("user_ids", ID),
+                                            new Parameter("user_ids", userID),
                                             new Parameter("fields", "photo_400_orig"));
         connection = (HttpURLConnection) isUserRequest.openConnection();
         Map userResponse = mapper.fromJson(connection.getInputStream(), Map.class);
@@ -100,7 +101,8 @@ public class ManagerVK {
             String firstName = (String) information.get("first_name");
             String lastName = (String) information.get("last_name");
             String photoURL = (String) information.get("photo_400_orig");
-            return new Person(firstName, lastName, userID.toString(), new URL(photoURL));
+            String userLink = VK_PREFIX + userID;
+            return new Person(firstName, lastName, userID.toString(), new URL(photoURL), userLink);
         }
 
         throw new BadJsonResponseException();

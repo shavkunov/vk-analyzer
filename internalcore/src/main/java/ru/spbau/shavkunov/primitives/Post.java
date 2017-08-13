@@ -28,6 +28,7 @@ public class Post {
     private @NotNull String text;
     private @Nullable String defaultImage;
     private @NotNull String description;
+    private @NotNull String postLink;
     private int likes;
     private int reposts;
     private int views;
@@ -41,6 +42,7 @@ public class Post {
         reposts = (int) ((Map) json.get(REPOSTS.toString())).get("count");
         views = (int) ((Map) json.get(VIEWS.toString())).get("count");
         description = category.toString();
+        postLink = getPostLink(owner, json);
 
         if (countPhotoAttachments(json) == 0) {
             defaultImage = owner.getPhoto().toString();
@@ -48,6 +50,14 @@ public class Post {
         }
 
         images = getAttachedImageURLs(json);
+    }
+
+    private @NotNull String getPostLink(@NotNull User owner, @NotNull Map json) {
+        // TODO : replace with string builder
+        int postID = (int) json.get("id");
+        String url = owner.getLink() + "?w=wall" + owner.getID() + "_" + postID;
+
+        return url;
     }
 
     private @NotNull List<String> getAttachedImageURLs(@NotNull Map json) {
@@ -66,6 +76,10 @@ public class Post {
         return attach.stream()
                      .filter(map -> map.get("type").equals("photo"))
                      .count();
+    }
+
+    public @NotNull String getPostLink() {
+        return postLink;
     }
 
     public @NotNull String getDescription() {

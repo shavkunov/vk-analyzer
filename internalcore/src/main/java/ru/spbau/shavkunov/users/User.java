@@ -11,6 +11,7 @@ import java.net.URL;
  */
 @Entity
 public abstract class User {
+    protected @NotNull String link;
     protected @NotNull String name;
 
     @Id
@@ -18,6 +19,10 @@ public abstract class User {
     protected @NotNull URL photo;
 
     public abstract int getID();
+
+    public String getLink() {
+        return link;
+    }
 
     public URL getPhoto() {
         return photo;

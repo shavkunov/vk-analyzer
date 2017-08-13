@@ -11,10 +11,11 @@ import java.net.URL;
  */
 @Entity
 public class Group extends User {
-    public Group(@NotNull String name, @NotNull String ID, @NotNull URL photoURL) {
+    public Group(@NotNull String name, @NotNull String ID, @NotNull URL photoURL, @NotNull String userLink) {
         this.photo = photoURL;
         this.name = name;
         this.ID = ID;
+        this.link = userLink;
     }
 
     @Override

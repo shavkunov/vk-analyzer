@@ -13,11 +13,13 @@ import java.net.URL;
 public class Person extends User {
     private @NotNull String surname;
 
-    public Person(@NotNull String name, @NotNull String surname, @NotNull String ID, @NotNull URL url) {
+    public Person(@NotNull String name, @NotNull String surname,
+                  @NotNull String ID, @NotNull URL url, @NotNull String userLink) {
         this.name = name;
         this.surname = surname;
         this.ID = ID;
         this.photo = url;
+        this.link = userLink;
     }
 
     public String getSurname() {
