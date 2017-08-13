@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.spbau.shavkunov.primitives.PostQuantity.LIKES;
+import static ru.spbau.shavkunov.primitives.PostQuantity.REPOSTS;
+import static ru.spbau.shavkunov.primitives.PostQuantity.VIEWS;
+
 @Entity
 public class Post {
     @Id
@@ -21,12 +25,18 @@ public class Post {
     private @Nullable String defaultImage;
     private @NotNull User owner;
     private @NotNull String description;
+    private int likes;
+    private int reposts;
+    private int views;
 
     @ElementCollection(targetClass=String.class)
     private @Nullable List<String> images;
 
     public Post(@NotNull User owner, @NotNull Map json, @NotNull PostCategory category) {
         text = (String) json.get("text");
+        likes = (int) json.get(LIKES.toString());
+        reposts = (int) json.get(REPOSTS.toString());
+        views = (int) json.get(VIEWS.toString());
 
         if (countPhotoAttachments(json) == 0) {
             defaultImage = owner.getPhoto().toString();
