@@ -42,10 +42,7 @@ public class ManagerVKTest {
 
     //@Test
     public void getStatsTest() throws IOException, InvalidAmountException, BadJsonResponseException {
-        String url = "https://api.vk.com/method/wall.get?owner_id=-23242408&" +
-                     "count=20&" +
-                     "access_token=d2872404d2872404d28724049dd2da8487dd287d28724048b042815868fa71cc8fc8992&" +
-                     "v=5.67";
+        String url = "https://api.vk.com/method/wall.get?owner_id=-23242408&count=20&access_token=d2872404d2872404d28724049dd2da8487dd287d28724048b042815868fa71cc8fc8992&v=5.67";
 
         ManagerVK vk = new ManagerVK("alfabank", 20);
         Statistics stats = vk.getStatistics();
@@ -67,5 +64,11 @@ public class ManagerVKTest {
 
         stats.getBestLikesPost().getDescription();
         //posts.stream().forEach(post -> System.out.println(post.getDescription()));
+    }
+
+    @Test
+    public void testPersonRequestTest() throws InvalidAmountException, BadJsonResponseException, IOException {
+        ManagerVK vk = new ManagerVK("hamelinny", 20);
+        Statistics stats = vk.getStatistics();
     }
 }

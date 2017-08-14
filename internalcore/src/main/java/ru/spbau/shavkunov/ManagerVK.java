@@ -59,7 +59,8 @@ public class ManagerVK {
         URL postsRequest = getRequestUrl(WALL_GET,
                 new Parameter("owner_id", String.valueOf(user.getID())),
                 new Parameter("count", String.valueOf(amount)),
-                new Parameter("access_token", SERVICE_TOKEN));
+                new Parameter("access_token", SERVICE_TOKEN),
+                new Parameter("v", "5.67"));
         HttpURLConnection connection = (HttpURLConnection) postsRequest.openConnection();
 
         ObjectMapper mapper = JsonFactory.create();
@@ -76,7 +77,8 @@ public class ManagerVK {
     public @NotNull User identify() throws BadJsonResponseException, IOException {
         // TODO : twice written the same thing, need to change
         URL isGroupRequest = getRequestUrl(GROUP_GET_BY_ID,
-                                            new Parameter("group_id", userID));
+                                            new Parameter("group_id", userID),
+                                            new Parameter("v", "5.67"));
         HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
 
         ObjectMapper mapper = JsonFactory.create();
@@ -92,12 +94,13 @@ public class ManagerVK {
 
         URL isUserRequest = getRequestUrl(USERS_GET,
                                             new Parameter("user_ids", userID),
-                                            new Parameter("fields", "photo_400_orig"));
+                                            new Parameter("fields", "photo_400_orig"),
+                                            new Parameter("v", "5.67"));
         connection = (HttpURLConnection) isUserRequest.openConnection();
         Map userResponse = mapper.fromJson(connection.getInputStream(), Map.class);
         if (userResponse.containsKey("response")) {
             Map information = (Map) ((List) userResponse.get("response")).get(0);
-            Integer userID = (Integer) information.get("uid");
+            Integer userID = (Integer) information.get("id");
             String firstName = (String) information.get("first_name");
             String lastName = (String) information.get("last_name");
             String photoURL = (String) information.get("photo_400_orig");
@@ -108,7 +111,7 @@ public class ManagerVK {
         throw new BadJsonResponseException();
     }
 
-    private URL getRequestUrl(@NotNull Method method, @NotNull Parameter... parameters) throws MalformedURLException {
+    public static URL getRequestUrl(@NotNull Method method, @NotNull Parameter... parameters) throws MalformedURLException {
         // TODO : replace with string builder
         String base = "https://api.vk.com/method/";
         String request = base + method.toString() + "?";
@@ -117,7 +120,7 @@ public class ManagerVK {
             request += parameter.getName() + "=" + parameter.getValue() + "&";
         }
 
-        request += "v=5.67";// specify version
+        request = request.substring(0, request.length() - 1);
 
         return new URL(request);
     }

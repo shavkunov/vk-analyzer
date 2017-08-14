@@ -8,7 +8,8 @@ import org.jetbrains.annotations.NotNull;
 public enum Method {
     GROUP_GET_BY_ID("groups.getById"),
     USERS_GET("users.get"),
-    WALL_GET("wall.get");
+    WALL_GET("wall.get"),
+    PHOTO_GET_BY_ID("photos.getById");
 
     private @NotNull String value;
 

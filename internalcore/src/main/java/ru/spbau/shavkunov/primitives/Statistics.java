@@ -7,6 +7,7 @@ import ru.spbau.shavkunov.users.User;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class Statistics implements Serializable {
     private @NotNull User owner;
     private int amount;
 
-    public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects, int amount) {
+    public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects, int amount) throws IOException {
         countAverageLikes(jsonObjects);
         countAverageReposts(jsonObjects);
         countAverageViews(jsonObjects);
@@ -66,7 +67,7 @@ public class Statistics implements Serializable {
     }
 
     private @NotNull Post findQuantityPost(@NotNull PostIdentity identifier, @NotNull User owner,
-                                  @NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
+                                  @NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) throws IOException {
 
         int compareUnit = 1;
         if (identifier == WORST) {
@@ -82,27 +83,27 @@ public class Statistics implements Serializable {
         return new Post(owner, jsonPost, category);
     }
 
-    private @NotNull Post getBestViewsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getBestViewsPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(BEST, owner, VIEWS, json);
     }
 
-    private @NotNull Post getBestLikesPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getBestLikesPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(BEST, owner, LIKES, json);
     }
 
-    private @NotNull Post getBestRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getBestRepostsPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(BEST, owner, REPOSTS, json);
     }
 
-    private @NotNull Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getWorseLikesPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(WORST, owner, LIKES, json);
     }
 
-    private @NotNull Post getWorseViewsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getWorseViewsPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(WORST, owner, VIEWS, json);
     }
 
-    private @NotNull Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) {
+    private @NotNull Post getWorseRepostsPost(@NotNull User owner, @NotNull List<Map> json) throws IOException {
         return findQuantityPost(WORST, owner, REPOSTS, json);
     }
 
