@@ -157,7 +157,8 @@ public class ManagerVK {
 
     private boolean validateVkLink(@NotNull String link) {
         if (!isVkLink(link)) {
-            return false;
+            userID = link;
+            link = VK_PREFIX + link;
         }
 
         try {

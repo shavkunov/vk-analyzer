@@ -5,6 +5,7 @@ import org.boon.json.ObjectMapper;
 import org.junit.Test;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
+import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.primitives.Post;
 import ru.spbau.shavkunov.primitives.Statistics;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 public class ManagerVKTest {
     //@Test
     @SuppressWarnings("unchecked")
-    public void rightResponseTest() throws InvalidAmountException, IOException, URISyntaxException {
+    public void rightResponseTest() throws InvalidAmountException, IOException, URISyntaxException, InvalidPageLinkException {
         ManagerVK manager = new ManagerVK("alfabang", 10);
         //System.out.println(new MapPrinter<>(manager.identify()));
     }
@@ -41,7 +42,7 @@ public class ManagerVKTest {
     }
 
     //@Test
-    public void getStatsTest() throws IOException, InvalidAmountException, BadJsonResponseException {
+    public void getStatsTest() throws IOException, InvalidAmountException, BadJsonResponseException, InvalidPageLinkException {
         String url = "https://api.vk.com/method/wall.get?owner_id=-23242408&count=20&access_token=d2872404d2872404d28724049dd2da8487dd287d28724048b042815868fa71cc8fc8992&v=5.67";
 
         ManagerVK vk = new ManagerVK("alfabank", 20);
@@ -49,7 +50,7 @@ public class ManagerVKTest {
     }
 
     @Test
-    public void testPostDescription() throws BadJsonResponseException, IOException, InvalidAmountException {
+    public void testPostDescription() throws BadJsonResponseException, IOException, InvalidAmountException, InvalidPageLinkException {
         ManagerVK vk = new ManagerVK("alfabank", 20);
         Statistics stats = vk.getStatistics();
 
@@ -67,7 +68,7 @@ public class ManagerVKTest {
     }
 
     @Test
-    public void testPersonRequestTest() throws InvalidAmountException, BadJsonResponseException, IOException {
+    public void testPersonRequestTest() throws InvalidAmountException, BadJsonResponseException, IOException, InvalidPageLinkException {
         ManagerVK vk = new ManagerVK("hamelinny", 20);
         Statistics stats = vk.getStatistics();
     }
