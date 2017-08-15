@@ -13,7 +13,7 @@ import ru.spbau.shavkunov.services.DataRepository;
 
 import java.util.Map;
 
-import static ru.spbau.shavkunov.controllers.ResponseCode.*;
+import static ru.spbau.shavkunov.controllers.ResponseDescription.*;
 
 /**
  * Class which handles client requests.

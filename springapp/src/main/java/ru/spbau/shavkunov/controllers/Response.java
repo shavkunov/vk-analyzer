@@ -3,20 +3,33 @@ package ru.spbau.shavkunov.controllers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static ru.spbau.shavkunov.controllers.ResponseDescription.OK;
+
 /**
  * Created by Mikhail Shavkunov
  */
 public class Response {
-    private @NotNull ResponseCode responseCode;
+    private @NotNull ResponseType type;
+    private @NotNull ResponseDescription description;
     private @Nullable Object data;
 
-    public Response(@NotNull ResponseCode responseCode, @Nullable Object data) {
-        this.responseCode = responseCode;
+    public Response(@NotNull ResponseDescription description, @Nullable Object data) {
+        this.description = description;
+        if (description == OK) {
+            type = ResponseType.OK;
+        } else {
+            type = ResponseType.ERROR;
+        }
+
         this.data = data;
     }
 
-    public ResponseCode getResponseCode() {
-        return responseCode;
+    public ResponseType getType() {
+        return type;
+    }
+
+    public ResponseDescription getDescription() {
+        return description;
     }
 
     public Object getData() {
