@@ -1,4 +1,4 @@
-package ru.spbau.shavkunov.controllers;
+package ru.spbau.shavkunov.controllers.response;
 
 import org.jetbrains.annotations.NotNull;
 

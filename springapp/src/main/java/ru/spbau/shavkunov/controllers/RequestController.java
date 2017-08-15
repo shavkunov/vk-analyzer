@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.spbau.shavkunov.ManagerVK;
+import ru.spbau.shavkunov.controllers.response.Response;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
 import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.primitives.Statistics;
@@ -13,7 +14,7 @@ import ru.spbau.shavkunov.services.DataRepository;
 
 import java.util.Map;
 
-import static ru.spbau.shavkunov.controllers.ResponseDescription.*;
+import static ru.spbau.shavkunov.controllers.response.ResponseDescription.*;
 
 /**
  * Class which handles client requests.

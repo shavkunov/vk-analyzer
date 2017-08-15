@@ -1,9 +1,7 @@
-package ru.spbau.shavkunov.controllers;
+package ru.spbau.shavkunov.controllers.response;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import static ru.spbau.shavkunov.controllers.ResponseDescription.OK;
 
 /**
  * Created by Mikhail Shavkunov
@@ -15,7 +13,7 @@ public class Response {
 
     public Response(@NotNull ResponseDescription description, @Nullable Object data) {
         this.description = description;
-        if (description == OK) {
+        if (description == ResponseDescription.OK) {
             type = ResponseType.OK;
         } else {
             type = ResponseType.ERROR;
