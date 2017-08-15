@@ -6,18 +6,14 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.spbau.shavkunov.ManagerVK;
-import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
+import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.primitives.Statistics;
 import ru.spbau.shavkunov.services.DataRepository;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Map;
 
-import static ru.spbau.shavkunov.controllers.Response.ERROR;
-import static ru.spbau.shavkunov.controllers.Response.OK;
+import static ru.spbau.shavkunov.controllers.ResponseCode.*;
 
 /**
  * Class which handles client requests.
@@ -28,33 +24,25 @@ public class RequestController {
     @Autowired
     private @NotNull DataRepository repository;
 
-    @RequestMapping("/link={pageLink}&posts={postsAmount}")
-    public @NotNull Statistics getStatistics(@PathVariable @NotNull String pageLink, @PathVariable int postsAmount)
-            throws InvalidAmountException, BadJsonResponseException, IOException {
-        // TODO : replace with static call
-        ManagerVK vk = new ManagerVK(pageLink, postsAmount);
-
-        return vk.getStatistics();
-    }
-
-    @RequestMapping(method = RequestMethod.POST, value = "/validateVkLink", consumes = "text/plain")
-    public @NotNull Response validateVkLink(@RequestBody String json) {
+    @RequestMapping(value = "/getStats", method = RequestMethod.POST)
+    public @NotNull Response getStatistics(@RequestBody String json)  {
         ObjectMapper mapper = JsonFactory.create();
-        Map linkContainer = mapper.fromJson(json, Map.class);
+        Map request = mapper.fromJson(json, Map.class);
+        String pageLink = (String) request.get("link");
+        int postsAmount = (int) request.get("posts");
 
-        String link = (String) linkContainer.get("link");
+        // TODO : replace with static call
         try {
-            URL request = new URL(link);
-            HttpURLConnection connection = (HttpURLConnection) request.openConnection();
-
-            if (connection.getResponseCode() == 404) {
-                return ERROR;
-            }
+            ManagerVK vk = new ManagerVK(pageLink, postsAmount);
+            Response response = new Response(OK, vk.getStatistics());
+            return response;
+        } catch (InvalidAmountException exception) {
+            return new Response(INVALID_AMOUNT, null);
+        } catch (InvalidPageLinkException exception) {
+            return new Response(INVALID_LINK, null);
         } catch (Exception e) {
-            return ERROR;
+            return new Response(INTERNAL_ERROR, null);
         }
-
-        return OK;
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/stats")
