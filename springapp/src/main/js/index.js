@@ -1,15 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import StartForm from './start-form.js';
+import UI from './components/ui.js';
 
+injectTapEventPlugin();
 const App = () => (
     <MuiThemeProvider>
-        <StartForm />
+        <UI />
     </MuiThemeProvider>
 );
 
 ReactDOM.render(
     <App />,
-    document.getElementById('react')
+    document.getElementById('app')
 );

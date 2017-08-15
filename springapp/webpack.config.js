@@ -2,7 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
-    entry: './src/main/js/main.js',
+    entry: './src/main/js/index.js',
     devtool: 'sourcemaps',
     output: {
         path: __dirname,
