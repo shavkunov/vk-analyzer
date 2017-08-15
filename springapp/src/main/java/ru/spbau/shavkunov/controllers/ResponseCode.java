@@ -11,10 +11,24 @@ public enum ResponseCode {
     INVALID_LINK("Invalid page link"),
     INTERNAL_ERROR("UNKNOWN ERROR");
 
+    private static final @NotNull String okType = "OK";
+    private static final @NotNull String errorType = "ERROR";
+
     private @NotNull String description;
+    private @NotNull String type;
 
     ResponseCode(@NotNull String value) {
         this.description = value;
+
+        if (description.equals(okType)) {
+            type = okType;
+        } else {
+            type = errorType;
+        }
+    }
+
+    public String getType() {
+        return type;
     }
 
     public @NotNull String getDescription() {
