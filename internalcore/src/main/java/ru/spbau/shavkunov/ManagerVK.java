@@ -3,15 +3,16 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
-import ru.spbau.shavkunov.users.Group;
-import ru.spbau.shavkunov.users.Person;
-import ru.spbau.shavkunov.users.User;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
+import ru.spbau.shavkunov.exceptions.EmptyLinkException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
+import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.network.Method;
 import ru.spbau.shavkunov.network.Parameter;
 import ru.spbau.shavkunov.primitives.Statistics;
+import ru.spbau.shavkunov.users.Group;
+import ru.spbau.shavkunov.users.Person;
+import ru.spbau.shavkunov.users.User;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,9 +24,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-import static ru.spbau.shavkunov.Constants.SERVICE_TOKEN;
-import static ru.spbau.shavkunov.Constants.VK_PREFIX;
-import static ru.spbau.shavkunov.Constants.VK_PREFIX_NO_PROTOCOL;
+import static ru.spbau.shavkunov.Constants.*;
 import static ru.spbau.shavkunov.network.Method.*;
 
 /**
@@ -44,9 +43,13 @@ public class ManagerVK {
      * It should satisfy a condition: amount at least 10, but not no more then 80.
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
-    public ManagerVK(@NotNull String link, int amount) throws InvalidAmountException, InvalidPageLinkException {
+    public ManagerVK(@NotNull String link, int amount) throws InvalidAmountException, InvalidPageLinkException, EmptyLinkException {
         if (amount < 10 || amount > 80) {
             throw new InvalidAmountException();
+        }
+
+        if (link.equals("")) {
+            throw new EmptyLinkException();
         }
 
         if (!validateVkLink(link)) {
@@ -109,7 +112,7 @@ public class ManagerVK {
             String firstName = (String) information.get("first_name");
             String lastName = (String) information.get("last_name");
             String photoURL = (String) information.get("photo_400_orig");
-            String userLink = VK_PREFIX + userID;
+            String userLink = VK_PREFIX + "id" + userID;
             return new Person(firstName, lastName, userID.toString(), new URL(photoURL), userLink);
         }
 
