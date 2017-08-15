@@ -2,6 +2,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import $ from "jquery";
+
 const center = {
 	display: "flex",
 	flexDirection: "column",
@@ -49,22 +50,32 @@ class StartForm extends React.Component {
     }
 
     showError = (errorDescription) => {
+        if (errorDescription.type === "Link") {
+            this.setState({
+                linkError: errorDescription.description
+        });
 
-    }
+            return;
+        }
+
+        if (errorDescription.type === "Amount") {
+            this.setState({
+                posts: errorDescription.description
+        });
+
+            return;
+        }
+    };
 
     validation = () => {
-    	if (this.state.link === "") {
-    		this.setState({
-    			linkError: "Please, enter link to vk user/community"
-    		});
-
-    		return;
-    	}
-
-    	let url = "http://localhost:8080/getStats";
+        let url = "http://localhost:8080/getStats";
     	// POST Request to server.
+        let requestData = {
+            link: this.state.link,
+            posts: this.state.posts,
+        };
 
-    	$.getJSON(url, function (response) {
+    	$.post(url, requestData, function (response) {
         	if (response.type !== "OK") {
         		this.showError(response.description);
         		return;
@@ -73,7 +84,7 @@ class StartForm extends React.Component {
         	let table = response.data;
         	this.props.handleSubmit(table);
         });
-    }
+    };
 
     // TODO : one function
     handleLinkChange = (event) => {

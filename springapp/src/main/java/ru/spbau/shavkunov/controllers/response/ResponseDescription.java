@@ -10,6 +10,7 @@ public enum ResponseDescription {
     OK("OK"),
     INVALID_AMOUNT("Invalid amount. Please, set from 10 to 80"),
     INVALID_LINK("Invalid page link"),
+    EMPTY_LINK("Please, enter link to vk user/community"),
     INTERNAL_ERROR("UNKNOWN ERROR");
 
     private @NotNull String description;

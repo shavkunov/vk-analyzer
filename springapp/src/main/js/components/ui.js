@@ -38,7 +38,7 @@ class UI extends React.Component {
                 </Paper>
             );
         }
-    }
+    };
 
     render() {
         return (
