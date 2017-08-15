@@ -3,6 +3,7 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.users.Group;
 import ru.spbau.shavkunov.users.Person;
 import ru.spbau.shavkunov.users.User;
@@ -24,6 +25,7 @@ import java.util.Map;
 
 import static ru.spbau.shavkunov.Constants.SERVICE_TOKEN;
 import static ru.spbau.shavkunov.Constants.VK_PREFIX;
+import static ru.spbau.shavkunov.Constants.VK_PREFIX_NO_PROTOCOL;
 import static ru.spbau.shavkunov.network.Method.*;
 
 /**
@@ -37,17 +39,20 @@ public class ManagerVK {
     private @NotNull int amount;
 
     /**
-     * @param userID -- userID of given user or community
+     * @param link -- possible link of given user or community
      * @param amount -- amount of posts to analyze.
      * It should satisfy a condition: amount at least 10, but not no more then 80.
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
-    public ManagerVK(@NotNull String userID, int amount) throws InvalidAmountException {
+    public ManagerVK(@NotNull String link, int amount) throws InvalidAmountException, InvalidPageLinkException {
         if (amount < 10 || amount > 80) {
             throw new InvalidAmountException();
         }
 
-        this.userID = userID;
+        if (!validateVkLink(link)) {
+            throw new InvalidPageLinkException();
+        }
+
         this.amount = amount;
     }
 
@@ -134,5 +139,38 @@ public class ManagerVK {
         while ((inputStr = streamReader.readLine()) != null)
             responseStrBuilder.append(inputStr);
         return responseStrBuilder.toString();
+    }
+
+    private boolean isVkLink(@NotNull String link) {
+        if (link.startsWith(VK_PREFIX)) {
+            userID = link.replaceFirst("^" + VK_PREFIX, "");
+            return true;
+        }
+
+        if (link.startsWith(VK_PREFIX_NO_PROTOCOL)) {
+            userID = link.replaceFirst("^" + VK_PREFIX_NO_PROTOCOL, "");
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validateVkLink(@NotNull String link) {
+        if (!isVkLink(link)) {
+            return false;
+        }
+
+        try {
+            URL request = new URL(link);
+            HttpURLConnection connection = (HttpURLConnection) request.openConnection();
+
+            if (connection.getResponseCode() == 404) {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
     }
 }
