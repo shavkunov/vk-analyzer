@@ -8,6 +8,7 @@ import ru.spbau.shavkunov.primitives.Statistics;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -73,5 +74,14 @@ public class ManagerVKTest {
     public void testAnotherPerson() throws Exception {
         ManagerVK vk = new ManagerVK("mv.shavkunov", "20");
         Statistics stats = vk.getStatistics();
+    }
+
+    @Test
+    public void testRound() {
+        double value = 1881234.66666666666666;
+
+        DecimalFormat df = new DecimalFormat("#.###");
+        String answer = df.format(value).replace(',', '.');
+        System.out.println(Double.parseDouble(answer));
     }
 }

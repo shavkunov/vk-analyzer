@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -125,12 +126,16 @@ public class Statistics implements Serializable {
     }
 
     private double countAverageQuantity(@NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
-        return jsonObjects.stream()
-                          .map(map -> (Map) map.get(quantity.toString()))
-                          .mapToInt(map -> (Integer) map.get("count"))
-                          .mapToDouble(input -> (double) input)
-                          .average()
-                          .getAsDouble();
+        double answer = jsonObjects.stream()
+                                   .map(map -> (Map) map.get(quantity.toString()))
+                                   .mapToInt(map -> (Integer) map.get("count"))
+                                   .mapToDouble(input -> (double) input)
+                                   .average()
+                                   .getAsDouble();
+
+        DecimalFormat df = new DecimalFormat("#.###");
+        String stringAnswer = df.format(answer).replace(',', '.');
+        return Double.valueOf(stringAnswer);
     }
 
     public double getAverageViews() {
