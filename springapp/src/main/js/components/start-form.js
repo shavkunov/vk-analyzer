@@ -84,6 +84,8 @@ class StartForm extends React.Component {
         // TODO : bind this
         let handleError = this.showError;
         let handleTable = this.props.handleSubmit;
+        let stopLoad = this.props.stopLoad;
+        this.props.beginLoad();
         $.ajax({
             type: "POST",
             url: requestUrl,
@@ -92,6 +94,7 @@ class StartForm extends React.Component {
             dataType: "json",
             success: function(response) {
                 if (response.type != "OK") {
+                    stopLoad();
                     handleError(response.description);
                     return;
                 }

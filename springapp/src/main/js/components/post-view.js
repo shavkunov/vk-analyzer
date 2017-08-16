@@ -49,7 +49,8 @@ class PostView extends React.Component {
         if (this.props.data.images.length == 1) {
             let imageUrl = this.props.data.images[0];
             return (
-                <img src={imageUrl} style={{ maxHeight: "500px", maxWidth: "500px", }}/> 
+                // TODO : relative to screen.
+                <img src={imageUrl} style={{ maxHeight: "500px", maxWidth: "400px", }}/>
             );
         }
 
