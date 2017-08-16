@@ -5,6 +5,15 @@ import Paper from 'material-ui/Paper';
 import Snackbar from 'material-ui/Snackbar';
 import RaisedButton from 'material-ui/RaisedButton';
 import Loading from 'react-loading-animation';
+import { fadeInUp } from 'react-animations';
+import { StyleSheet, css } from 'aphrodite';
+
+const fadeAnimation = StyleSheet.create({
+    fadeInUp: {
+        animationName: fadeInUp,
+        animationDuration: '1s'
+    }
+});
 
 const paper = {
     display: "flex",
@@ -46,7 +55,7 @@ class UI extends React.Component {
     renderTable = () => {
         if (this.state.isTableLoaded) {
             return (
-                <Paper zDepth={4} style={paper} >
+                <Paper zDepth={4} style={paper} className={css(fadeAnimation.fadeInUp)}>
 
                     <RaisedButton onClick={this.handleTouchTap}
                                   label="Add to database"/>
