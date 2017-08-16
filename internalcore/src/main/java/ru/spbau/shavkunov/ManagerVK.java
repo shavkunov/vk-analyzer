@@ -39,21 +39,29 @@ public class ManagerVK {
 
     /**
      * @param link -- possible link of given user or community
-     * @param amount -- amount of posts to analyze.
+     * @param requestAmount -- amount of posts to analyze.
      * It should satisfy a condition: amount at least 10, but not no more then 80.
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
-    public ManagerVK(@NotNull String link, int amount) throws InvalidAmountException, InvalidPageLinkException, EmptyLinkException {
-        if (amount < 10 || amount > 80) {
-            throw new InvalidAmountException();
-        }
-
+    public ManagerVK(@NotNull String link, @NotNull String requestAmount) throws InvalidAmountException, InvalidPageLinkException, EmptyLinkException {
         if (link.equals("")) {
             throw new EmptyLinkException();
         }
 
         if (!validateVkLink(link)) {
             throw new InvalidPageLinkException();
+        }
+
+        try {
+            Integer.valueOf(requestAmount);
+        } catch (Exception e) {
+            throw new InvalidAmountException();
+        }
+
+        Integer amount = Integer.valueOf(requestAmount);
+
+        if (amount < 10 || amount > 80) {
+            throw new InvalidAmountException();
         }
 
         this.amount = amount;

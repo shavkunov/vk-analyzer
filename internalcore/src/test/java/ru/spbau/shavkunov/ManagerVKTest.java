@@ -3,15 +3,10 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.junit.Test;
-import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
-import ru.spbau.shavkunov.exceptions.InvalidAmountException;
-import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.primitives.Post;
 import ru.spbau.shavkunov.primitives.Statistics;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +15,13 @@ import java.util.Map;
 public class ManagerVKTest {
     //@Test
     @SuppressWarnings("unchecked")
-    public void rightResponseTest() throws InvalidAmountException, IOException, URISyntaxException, InvalidPageLinkException {
-        ManagerVK manager = new ManagerVK("alfabang", 10);
+    public void rightResponseTest() throws Exception {
+        ManagerVK manager = new ManagerVK("alfabang", "10");
         //System.out.println(new MapPrinter<>(manager.identify()));
     }
 
     //@Test
-    public void isGroupRequestTest() throws IOException {
+    public void isGroupRequestTest() throws Exception {
         URL isGroupRequest = new URL("https://api.vk.com/method/groups.getById?group_id=alfabank&v=5.57");
         HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
 
@@ -42,16 +37,16 @@ public class ManagerVKTest {
     }
 
     //@Test
-    public void getStatsTest() throws IOException, InvalidAmountException, BadJsonResponseException, InvalidPageLinkException {
+    public void getStatsTest() throws Exception {
         String url = "https://api.vk.com/method/wall.get?owner_id=-23242408&count=20&access_token=d2872404d2872404d28724049dd2da8487dd287d28724048b042815868fa71cc8fc8992&v=5.67";
 
-        ManagerVK vk = new ManagerVK("alfabank", 20);
+        ManagerVK vk = new ManagerVK("alfabank", "20");
         Statistics stats = vk.getStatistics();
     }
 
     @Test
-    public void testPostDescription() throws BadJsonResponseException, IOException, InvalidAmountException, InvalidPageLinkException {
-        ManagerVK vk = new ManagerVK("alfabank", 20);
+    public void testPostDescription() throws Exception {
+        ManagerVK vk = new ManagerVK("alfabank", "20");
         Statistics stats = vk.getStatistics();
 
         List<Post> posts = new ArrayList();
@@ -68,8 +63,15 @@ public class ManagerVKTest {
     }
 
     @Test
-    public void testPersonRequestTest() throws InvalidAmountException, BadJsonResponseException, IOException, InvalidPageLinkException {
-        ManagerVK vk = new ManagerVK("hamelinny", 20);
+    public void testPersonRequestTest() throws Exception {
+        ManagerVK vk = new ManagerVK("hamelinny", "20");
+        Statistics stats = vk.getStatistics();
+    }
+
+    //@Test
+    // TODO: more exceptions: user hid wall, user banned
+    public void testAnotherPerson() throws Exception {
+        ManagerVK vk = new ManagerVK("mv.shavkunov", "20");
         Statistics stats = vk.getStatistics();
     }
 }
