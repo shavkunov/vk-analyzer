@@ -81,26 +81,6 @@
                         </configuration>
                     </execution>
 
-                    <execution>
-                        <id>npm install material-ui</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install material-ui</arguments>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>npm install jquery</id>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>install jquery</arguments>
-                        </configuration>
-                    </execution>
-
                 </executions>
             </plugin>
         </plugins>

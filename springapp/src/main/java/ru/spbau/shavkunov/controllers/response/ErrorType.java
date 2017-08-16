@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
  * Created by Mikhail Shavkunov
  */
 public enum ErrorType {
-    LINK("Link"),
-    AMOUNT("Amount");
+    LINK("LINK"),
+    AMOUNT("AMOUNT");
 
     private @NotNull String description;
 

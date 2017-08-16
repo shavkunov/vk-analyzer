@@ -11,9 +11,9 @@ public class Response {
     private @NotNull ResponseDescription description;
     private @Nullable Object data;
 
-    public Response(@NotNull ResponseDescription description, @Nullable Object data) {
-        this.description = description;
-        if (description == ResponseDescription.OK) {
+    public Response(@NotNull String description, @Nullable Object data) {
+        this.description = new ResponseDescription(description);
+        if (description.equals(ResponseDescription.OK)) {
             type = ResponseType.OK;
         } else {
             type = ResponseType.ERROR;

@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public class Request {
     private @NotNull String link;
-    private int posts;
+    private @NotNull String posts;
 
-    public Request(@NotNull String link, int posts) {
+    public Request(@NotNull String link, String posts) {
         this.link = link;
         this.posts = posts;
     }
@@ -18,7 +18,7 @@ public class Request {
         return link;
     }
 
-    public int getPosts() {
+    public String getPosts() {
         return posts;
     }
 
@@ -26,7 +26,7 @@ public class Request {
         this.link = link;
     }
 
-    public void setPosts(int posts) {
+    public void setPosts(String posts) {
         this.posts = posts;
     }
 

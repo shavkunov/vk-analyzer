@@ -50,39 +50,55 @@ class StartForm extends React.Component {
     }
 
     showError = (errorDescription) => {
-        if (errorDescription.type === "Link") {
+        if (errorDescription.type === "LINK") {
             this.setState({
                 linkError: errorDescription.description
-        });
+            });
 
             return;
+        } else {
+            this.setState({
+                linkError: null,
+            });
         }
 
-        if (errorDescription.type === "Amount") {
+        if (errorDescription.type === "AMOUNT") {
             this.setState({
-                posts: errorDescription.description
-        });
-
-            return;
+                postsError: errorDescription.description
+            });
+        } else {
+            this.setState({
+                postsError: null,
+            });
         }
     };
 
     validation = () => {
-        let url = "http://localhost:8080/getStats";
+        let requestUrl = "http://localhost:8080/getStats";
     	// POST Request to server.
         let requestData = {
             link: this.state.link,
             posts: this.state.posts,
         };
 
-    	$.post(url, requestData, function (response) {
-        	if (response.type !== "OK") {
-        		this.showError(response.description);
-        		return;
-        	}
+        // TODO : bind this
+        let handleError = this.showError;
+        let handleTable = this.props.handleSubmit;
+        $.ajax({
+            type: "POST",
+            url: requestUrl,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(requestData),
+            dataType: "json",
+            success: function(response) {
+                if (response.type != "OK") {
+                    handleError(response.description);
+                    return;
+                }
 
-        	let table = response.data;
-        	this.props.handleSubmit(table);
+                let table = response.data;
+                handleTable(table);
+            }
         });
     };
 

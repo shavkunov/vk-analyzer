@@ -30,7 +30,7 @@ public class RequestController {
                     produces = "application/json", consumes = "application/json")
     public @NotNull Response getStatistics(@RequestBody Request request)  {
         String pageLink = request.getLink();
-        int postsAmount = request.getPosts();
+        String postsAmount = request.getPosts();
 
         // TODO : replace with static call
         try {
@@ -38,14 +38,17 @@ public class RequestController {
             Response response = new Response(OK, vk.getStatistics());
             return response;
             // TODO: cosmetic fix
-        } catch (InvalidAmountException exception) {
-            return new Response(INVALID_AMOUNT, null);
         } catch (InvalidPageLinkException exception) {
+            exception.printStackTrace();
             return new Response(INVALID_LINK, null);
+        } catch (InvalidAmountException exception) {
+            exception.printStackTrace();
+            return new Response(INVALID_AMOUNT, null);
         } catch (EmptyLinkException exception) {
+            exception.printStackTrace();
             return new Response(EMPTY_LINK, null);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return new Response(INTERNAL_ERROR, null);
         }
     }

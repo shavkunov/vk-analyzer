@@ -34,7 +34,7 @@ class UI extends React.Component {
         if (this.state.isTableLoaded) {
             return (
                 <Paper zDepth={4} style={paper} >
-                    <StatsView name={this.state.name} posts={this.state.posts} table={this.state.table}/>
+                    <StatsView table={this.state.table}/>
                 </Paper>
             );
         }
