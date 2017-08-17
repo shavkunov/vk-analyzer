@@ -1,28 +1,21 @@
 package ru.spbau.shavkunov.primitives;
 
-import org.boon.json.JsonFactory;
-import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.spbau.shavkunov.network.Parameter;
 import ru.spbau.shavkunov.users.User;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.spbau.shavkunov.ManagerVK.getRequestUrl;
-import static ru.spbau.shavkunov.network.Method.PHOTO_GET_BY_ID;
+import static ru.spbau.shavkunov.VkRequest.getImageURL;
 import static ru.spbau.shavkunov.primitives.PostQuantity.*;
 
 /**
@@ -107,30 +100,6 @@ public class Post {
         photoURLs.forEach(logger::debug);
         // TODO: make other class to manage with photos.
         return photoURLs;
-    }
-
-    private @Nullable String getImageURL(@NotNull User owner, @NotNull Integer originalID) {
-        logger.debug("Getting image url");
-        try {
-            String photoID = owner.getID() + "_" + originalID;
-            logger.debug("Photo ID : {}", photoID);
-            URL isUserRequest = getRequestUrl(PHOTO_GET_BY_ID,
-                    new Parameter("photos", photoID));
-
-            logger.debug("is user request: {}", isUserRequest);
-            HttpURLConnection connection = (HttpURLConnection) isUserRequest.openConnection();
-            ObjectMapper mapper = JsonFactory.create();
-            Map photoResponse = mapper.fromJson(connection.getInputStream(), Map.class);
-            Map response = (Map) ((List) photoResponse.get("response")).get(0);
-            String imageUrl = (String) response.get("src_big");
-            logger.debug("image url: {}", imageUrl);
-            return imageUrl;
-        } catch (Exception e) {
-            logger.debug(Arrays.toString(e.getStackTrace()));
-        }
-
-        logger.debug("Failed to get image url");
-        return null;
     }
 
     private long countPhotoAttachments(@NotNull Map json) {

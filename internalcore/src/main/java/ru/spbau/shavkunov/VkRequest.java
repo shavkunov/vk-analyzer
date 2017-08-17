@@ -3,6 +3,7 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.network.Method;
 import ru.spbau.shavkunov.network.Parameter;
@@ -17,6 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -115,7 +117,7 @@ public class VkRequest {
     }
 
     /**
-     * Converts input json to string.
+     * Converts input json to string. TODO : remove this method and replace with more approriate.
      * @param inputStream response from server
      * @return json as string
      */
@@ -126,5 +128,30 @@ public class VkRequest {
         while ((inputStr = streamReader.readLine()) != null)
             responseStrBuilder.append(inputStr);
         return responseStrBuilder.toString();
+    }
+
+
+    public static  @Nullable String getImageURL(@NotNull User owner, @NotNull Integer originalID) {
+        logger.debug("Getting image url");
+        try {
+            String photoID = owner.getID() + "_" + originalID;
+            logger.debug("Photo ID : {}", photoID);
+            URL isUserRequest = getRequestUrl(PHOTO_GET_BY_ID,
+                    new Parameter("photos", photoID));
+
+            logger.debug("is user request: {}", isUserRequest);
+            HttpURLConnection connection = (HttpURLConnection) isUserRequest.openConnection();
+            ObjectMapper mapper = JsonFactory.create();
+            Map photoResponse = mapper.fromJson(connection.getInputStream(), Map.class);
+            Map response = (Map) ((List) photoResponse.get("response")).get(0);
+            String imageUrl = (String) response.get("src_big");
+            logger.debug("image url: {}", imageUrl);
+            return imageUrl;
+        } catch (Exception e) {
+            logger.debug(Arrays.toString(e.getStackTrace()));
+        }
+
+        logger.debug("Failed to get image url");
+        return null;
     }
 }
