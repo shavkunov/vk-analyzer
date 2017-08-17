@@ -1,7 +1,5 @@
 package ru.spbau.shavkunov;
 
-import org.boon.json.JsonFactory;
-import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,26 +7,18 @@ import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.exceptions.EmptyLinkException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
 import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
-import ru.spbau.shavkunov.network.Method;
-import ru.spbau.shavkunov.network.Parameter;
 import ru.spbau.shavkunov.primitives.Statistics;
-import ru.spbau.shavkunov.users.Group;
-import ru.spbau.shavkunov.users.Person;
 import ru.spbau.shavkunov.users.User;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import static ru.spbau.shavkunov.Constants.*;
-import static ru.spbau.shavkunov.network.Method.*;
+import static ru.spbau.shavkunov.Constants.VK_PREFIX;
+import static ru.spbau.shavkunov.Constants.VK_PREFIX_NO_PROTOCOL;
 
 /**
  * Manager collects appropriate data and give statistics about user wall.
@@ -77,20 +67,10 @@ public class ManagerVK {
         logger.debug("Validation succeeded");
     }
 
-    // These two methods: getStatistics and identify don't check whether there are some problems with connection.
-    // I mean, if the request is right and connection is timed out then they will throw exception.
-    // TODO : 3 times same thing!!!
     public @NotNull Statistics getStatistics() throws BadJsonResponseException, IOException {
-        User user = identify();
-        URL postsRequest = getRequestUrl(WALL_GET,
-                new Parameter("owner_id", String.valueOf(user.getID())),
-                new Parameter("count", String.valueOf(amount)),
-                new Parameter("access_token", SERVICE_TOKEN),
-                new Parameter("v", "5.67"));
-        HttpURLConnection connection = (HttpURLConnection) postsRequest.openConnection();
+        User user = VkRequest.identify(userID);
 
-        ObjectMapper mapper = JsonFactory.create();
-        Map response = mapper.fromJson(getJsonAsString(connection.getInputStream()), Map.class);
+        Map response = VkRequest.getWall(user, amount);
         if (response.containsKey("response")) {
             Map objects = (Map) response.get("response");
             // first one always total count
@@ -100,68 +80,11 @@ public class ManagerVK {
         throw new BadJsonResponseException();
     }
 
-    public @NotNull User identify() throws BadJsonResponseException, IOException {
-        // TODO : twice written the same thing, need to change
-        URL isGroupRequest = getRequestUrl(GROUP_GET_BY_ID,
-                                            new Parameter("group_id", userID),
-                                            new Parameter("v", "5.67"));
-        HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
-
-        ObjectMapper mapper = JsonFactory.create();
-        Map groupResponse = mapper.fromJson(connection.getInputStream(), Map.class);
-        if (groupResponse.containsKey("response")) {
-            Map information = (Map) ((List) groupResponse.get("response")).get(0);
-            Integer groupID = (Integer) information.get("id");
-            String groupName = (String) information.get("name");
-            String photoURL = (String) information.get("photo_100");
-            String userLink = VK_PREFIX + userID;
-            return new Group(groupName, groupID.toString(), new URL(photoURL), userLink);
-        }
-
-        URL isUserRequest = getRequestUrl(USERS_GET,
-                                            new Parameter("user_ids", userID),
-                                            new Parameter("fields", "photo_400_orig"),
-                                            new Parameter("v", "5.67"));
-        connection = (HttpURLConnection) isUserRequest.openConnection();
-        Map userResponse = mapper.fromJson(connection.getInputStream(), Map.class);
-        if (userResponse.containsKey("response")) {
-            Map information = (Map) ((List) userResponse.get("response")).get(0);
-            Integer userID = (Integer) information.get("id");
-            String firstName = (String) information.get("first_name");
-            String lastName = (String) information.get("last_name");
-            String photoURL = (String) information.get("photo_400_orig");
-            String userLink = VK_PREFIX + "id" + userID;
-            return new Person(firstName, lastName, userID.toString(), new URL(photoURL), userLink);
-        }
-
-        throw new BadJsonResponseException();
-    }
-
-    public static URL getRequestUrl(@NotNull Method method, @NotNull Parameter... parameters) throws MalformedURLException {
-        // TODO : replace with string builder
-        String base = "https://api.vk.com/method/";
-        String request = base + method.toString() + "?";
-
-        for (Parameter parameter : parameters) {
-            request += parameter.getName() + "=" + parameter.getValue() + "&";
-        }
-
-        request = request.substring(0, request.length() - 1);
-
-        return new URL(request);
-    }
-
-    // TODO : it's temporary. Something gone wrong with parsing directly from boon.
-    // maybe it's useful to convert input stream to utt-8
-    private @NotNull String getJsonAsString(@NotNull InputStream inputStream) throws IOException {
-        BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
-        StringBuilder responseStrBuilder = new StringBuilder();
-        String inputStr;
-        while ((inputStr = streamReader.readLine()) != null)
-            responseStrBuilder.append(inputStr);
-        return responseStrBuilder.toString();
-    }
-
+    /**
+     * Check link to vk belong.
+     * @param link provided link
+     * @return true if it's link with VK_PREFIX of VK_PREFIX without protocol(see constants).
+     */
     private boolean isVkLink(@NotNull String link) {
         logger.debug("Is link {} a vk link?", link);
         if (link.startsWith(VK_PREFIX)) {
@@ -180,11 +103,16 @@ public class ManagerVK {
         return false;
     }
 
+    /**
+     * Validation of provided link
+     * @param link provided link
+     * @return true, if it's link to vk user/community with vk prefix(see constants)
+     * or it's just name of the user(i.e. VK_PREFIX + link)
+     */
     private boolean validateVkLink(@NotNull String link) {
         logger.debug("Validating link: {}", link);
         if (!isVkLink(link)) {
             userID = link;
-            link = VK_PREFIX + link;
         }
 
         logger.debug("Trying to check existence of vk user: {}", userID + VK_PREFIX);
