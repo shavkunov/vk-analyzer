@@ -187,9 +187,9 @@ public class ManagerVK {
             link = VK_PREFIX + link;
         }
 
-        logger.debug("Trying to check existence of vk user: {}", link);
+        logger.debug("Trying to check existence of vk user: {}", userID + VK_PREFIX);
         try {
-            URL request = new URL(link);
+            URL request = new URL(userID + VK_PREFIX);
             HttpURLConnection connection = (HttpURLConnection) request.openConnection();
 
             if (connection.getResponseCode() == 404) {
