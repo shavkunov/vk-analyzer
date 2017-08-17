@@ -21,6 +21,9 @@ const rowAlignment = {
     marginTop: "10px",
 };
 
+/**
+ * Post representing component.
+ */
 class PostView extends React.Component {
     constructor(props) {
         super(props);

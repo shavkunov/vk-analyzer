@@ -2,6 +2,9 @@ import React from 'react';
 import StatsHeader from './stats-header';
 import StatsPostsView from './stats-posts-view';
 
+/**
+ * Component is collecting all subcomponents together.
+ */
 class StatsView extends React.Component {
     constructor(props) {
         super(props);

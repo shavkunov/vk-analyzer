@@ -11,10 +11,17 @@ const center = {
 	alignItems: "center",
 };
 
+/**
+ * Components which is responsible for link and posts forms and submit button
+ */
 class StartForm extends React.Component {
     constructor(props) {
         super(props);
 
+        /**
+         * Contains forms information and errors. If errors not null then appropriate message
+         * is shown to user.
+         */
         this.state = {
             link: "",
             posts: 0,
@@ -24,8 +31,6 @@ class StartForm extends React.Component {
     }
 
     render() {
-        // TODO : handle form input: errors, validation. Need to generate forms
-        // TODO : request url to user, but need only id, so need to cut vk prefix
         return (
             <div style={center}>
 
@@ -73,9 +78,11 @@ class StartForm extends React.Component {
         }
     };
 
+    /**
+     * Request to server and getting errors in case of wrong request.
+     */
     validation = () => {
         let requestUrl = "http://localhost:8080/getStats";
-    	// POST Request to server.
         let requestData = {
             link: this.state.link,
             posts: this.state.posts,
@@ -105,7 +112,6 @@ class StartForm extends React.Component {
         });
     };
 
-    // TODO : one function
     handleLinkChange = (event) => {
         this.setState({
             link: event.target.value,

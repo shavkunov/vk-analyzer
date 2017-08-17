@@ -31,6 +31,9 @@ const rowAlignment = {
     flexWrap: "wrap",
 };
 
+/**
+ * Component responsible for information displayed in stats header.
+ */
 class StatsHeader extends React.Component {
     constructor(props) {
         super(props);

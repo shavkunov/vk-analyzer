@@ -21,8 +21,12 @@ const center = {
     alignItems: "center",
     flexWrap: "wrap",
     marginTop: "15px",
-}
+};
 
+/**
+ * Component is responsible for show all posts to user.
+ * There are tabs and on each tab there are two posts.
+ */
 class StatsPostsView extends React.Component {
     constructor(props) {
         super(props);
