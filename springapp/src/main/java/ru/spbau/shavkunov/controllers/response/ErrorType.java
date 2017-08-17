@@ -2,9 +2,6 @@ package ru.spbau.shavkunov.controllers.response;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by Mikhail Shavkunov
- */
 public enum ErrorType {
     LINK("LINK"),
     AMOUNT("AMOUNT");

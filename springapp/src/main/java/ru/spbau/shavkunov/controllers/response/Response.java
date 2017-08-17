@@ -4,7 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Created by Mikhail Shavkunov
+ * Represents data sent to user. If request is correct then type is OK and data is a stats object.
+ * Otherwise need to consider description. Client can access the cause of the error.
  */
 public class Response {
     private @NotNull ResponseType type;

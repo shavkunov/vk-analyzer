@@ -26,6 +26,11 @@ public class RequestController {
     @Autowired
     private @NotNull DataRepository repository;
 
+    /**
+     * Handling main request.
+     * @param request a client main request for collecting statistics.
+     * @return Response class converted to json. (@see Response).
+     */
     @RequestMapping(value = "/getStats", method = RequestMethod.POST,
                     produces = "application/json", consumes = "application/json")
     public @NotNull Response getStatistics(@RequestBody Request request)  {
@@ -53,6 +58,10 @@ public class RequestController {
         }
     }
 
+    /**
+     * Handles save request of statistics
+     * @param stats same as from json which can be accessed from method getStatistics above.
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/saveStats")
     public void saveStats(@RequestBody @NotNull Statistics stats) {
         repository.save(stats);

@@ -3,13 +3,13 @@ package ru.spbau.shavkunov.controllers.response;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Mikhail Shavkunov
+ * Represents the main request of client i.e. vk link and amount of posts.
  */
 public class Request {
     private @NotNull String link;
     private @NotNull String posts;
 
-    public Request(@NotNull String link, String posts) {
+    public Request(@NotNull String link, @NotNull String posts) {
         this.link = link;
         this.posts = posts;
     }
