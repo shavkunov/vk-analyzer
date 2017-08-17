@@ -93,7 +93,7 @@ public class Post {
                 .filter(map -> map.get("type").equals("photo"))
                 .map(map -> (Map) map.get("photo"))
                 .map(map -> (Integer) map.get("id"))
-                .map(originalID -> getImageURL(owner, originalID))
+                .map(photoID -> getImageURL(owner, photoID))
                 .collect(Collectors.toList());
 
         logger.debug("Collected next urls:");

@@ -4,6 +4,8 @@ import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.network.Method;
 import ru.spbau.shavkunov.network.Parameter;
@@ -30,6 +32,7 @@ import static ru.spbau.shavkunov.network.Method.*;
  * Class used to send request to vk and get responses from vk website.
  */
 public class VkRequest {
+    private static final @NotNull Logger logger = LoggerFactory.getLogger(VkRequest.class);
 
     /**
      * Get wall posts of specified user.
@@ -38,16 +41,19 @@ public class VkRequest {
      * @return response from vk as json
      */
     public static @NotNull Map getWall(@NotNull User owner, int posts) throws IOException {
+        logger.debug("Get wall of owner: {} and posts: {}", owner.getName(), posts);
         URL postsRequest = getRequestUrl(WALL_GET,
                 new Parameter("owner_id", String.valueOf(owner.getID())),
                 new Parameter("count", String.valueOf(posts)),
                 new Parameter("access_token", SERVICE_TOKEN),
                 new Parameter("v", "5.67"));
+        logger.debug("Created request link: {}", postsRequest.toString());
         HttpURLConnection connection = (HttpURLConnection) postsRequest.openConnection();
 
         ObjectMapper mapper = JsonFactory.create();
         Map response = mapper.fromJson(getJsonAsString(connection.getInputStream()), Map.class);
 
+        logger.debug("Succeed");
         return response;
     }
 
@@ -57,14 +63,17 @@ public class VkRequest {
      * @return User object with appropriate methods.
      */
     public @NotNull static User identify(@NotNull String user) throws BadJsonResponseException, IOException {
+        logger.debug("Identify user: {}", user);
         URL isGroupRequest = getRequestUrl(GROUP_GET_BY_ID,
                 new Parameter("group_id", user),
                 new Parameter("v", "5.67"));
         HttpURLConnection connection = (HttpURLConnection) isGroupRequest.openConnection();
+        logger.debug("group request created: {}", isGroupRequest.toString());
 
         ObjectMapper mapper = JsonFactory.create();
         Map groupResponse = mapper.fromJson(connection.getInputStream(), Map.class);
         if (groupResponse.containsKey("response")) {
+            logger.debug("user {} is a group", user);
             Map information = (Map) ((List) groupResponse.get("response")).get(0);
             Integer groupID = (Integer) information.get("id");
             String groupName = (String) information.get("name");
@@ -77,9 +86,12 @@ public class VkRequest {
                 new Parameter("user_ids", user),
                 new Parameter("fields", "photo_400_orig"),
                 new Parameter("v", "5.67"));
+
+        logger.debug("User request created: {}", isUserRequest.toString());
         connection = (HttpURLConnection) isUserRequest.openConnection();
         Map userResponse = mapper.fromJson(connection.getInputStream(), Map.class);
         if (userResponse.containsKey("response")) {
+            logger.debug("User {} is a single vk user", user);
             Map information = (Map) ((List) userResponse.get("response")).get(0);
             Integer userID = (Integer) information.get("id");
             String firstName = (String) information.get("first_name");
@@ -89,6 +101,7 @@ public class VkRequest {
             return new Person(firstName, lastName, userID.toString(), new URL(photoURL), userLink);
         }
 
+        logger.debug("Vk object isn't identified");
         throw new BadJsonResponseException();
     }
 
@@ -130,14 +143,19 @@ public class VkRequest {
         return responseStrBuilder.toString();
     }
 
-
-    public static  @Nullable String getImageURL(@NotNull User owner, @NotNull Integer originalID) {
+    /**
+     * Gets direct image link of specified owner and photoID
+     * @param owner owner of image.
+     * @param photoID image id
+     * @return wanted link
+     */
+    public static  @Nullable String getImageURL(@NotNull User owner, @NotNull Integer photoID) {
         logger.debug("Getting image url");
         try {
-            String photoID = owner.getID() + "_" + originalID;
+            String photoLink = owner.getID() + "_" + photoID;
             logger.debug("Photo ID : {}", photoID);
             URL isUserRequest = getRequestUrl(PHOTO_GET_BY_ID,
-                    new Parameter("photos", photoID));
+                    new Parameter("photos", photoLink));
 
             logger.debug("is user request: {}", isUserRequest);
             HttpURLConnection connection = (HttpURLConnection) isUserRequest.openConnection();
