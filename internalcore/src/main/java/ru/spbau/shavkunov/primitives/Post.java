@@ -31,14 +31,32 @@ public class Post {
     @Id
     private @Nullable String id;
 
-    // save some other statistics to show user
+    // TODO : save other post's information
+
+    /**
+     * Posts text.
+     */
     private @NotNull String text;
+
+    /**
+     * Posts description. It's mean that post has best/worst parameter.
+     * Parameters are likes, reposts and views.
+     */
     private @NotNull String description;
+
+    /**
+     * Url to post.
+     */
     private @NotNull String postLink;
+
+    // amount of each parameters.
     private int likes;
     private int reposts;
     private int views;
 
+    /**
+     * Images attached to post
+     */
     @ElementCollection(targetClass=String.class)
     private @Nullable List<String> images;
 
@@ -96,7 +114,6 @@ public class Post {
 
         return null;
     }
-
 
     private long countPhotoAttachments(@NotNull Map json) {
         List<Map> attach = (List) json.get("attachments");

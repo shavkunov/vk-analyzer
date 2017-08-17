@@ -1,7 +1,7 @@
 package ru.spbau.shavkunov.exceptions;
 
 /**
- * Created by Mikhail Shavkunov
+ * Exception represents bad json answer from vk.com and it can't be handled.
  */
 public class BadJsonResponseException extends Exception {
 

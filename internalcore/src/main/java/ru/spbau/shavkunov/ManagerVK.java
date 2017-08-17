@@ -3,6 +3,8 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
 import ru.spbau.shavkunov.exceptions.EmptyLinkException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
@@ -31,6 +33,8 @@ import static ru.spbau.shavkunov.network.Method.*;
  * Manager collects appropriate data and give statistics about user wall.
  */
 public class ManagerVK {
+    private static final @NotNull Logger logger = LoggerFactory.getLogger(ManagerVK.class);
+
     /**
      * userID of the user or community of vk.com
      */
@@ -52,13 +56,12 @@ public class ManagerVK {
             throw new InvalidPageLinkException();
         }
 
+        Integer amount;
         try {
-            Integer.valueOf(requestAmount);
+            amount = Integer.valueOf(requestAmount);
         } catch (Exception e) {
             throw new InvalidAmountException();
         }
-
-        Integer amount = Integer.valueOf(requestAmount);
 
         if (amount < 10 || amount > 80) {
             throw new InvalidAmountException();

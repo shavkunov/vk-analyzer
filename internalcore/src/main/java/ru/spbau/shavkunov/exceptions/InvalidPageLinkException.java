@@ -1,7 +1,7 @@
 package ru.spbau.shavkunov.exceptions;
 
 /**
- * Created by Mikhail Shavkunov
+ * Exception is thrown when user provided incorrect link to vk user/comminity.
  */
 public class InvalidPageLinkException extends Exception {
 }

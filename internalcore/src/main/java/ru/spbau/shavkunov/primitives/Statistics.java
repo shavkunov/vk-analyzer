@@ -25,7 +25,6 @@ public class Statistics implements Serializable {
     @Id
     private @Nullable String id;
 
-    // TODO : set precision to 2
     private double averageLikes;
     private double averageReposts;
     private double averageViews;
