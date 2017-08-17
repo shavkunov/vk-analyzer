@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.spbau.shavkunov.ManagerVK;
 import ru.spbau.shavkunov.controllers.response.Request;
 import ru.spbau.shavkunov.controllers.response.Response;
+import ru.spbau.shavkunov.controllers.response.exceptions.WrongResponseInitException;
 import ru.spbau.shavkunov.exceptions.EmptyLinkException;
 import ru.spbau.shavkunov.exceptions.InvalidAmountException;
 import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
@@ -33,28 +34,27 @@ public class RequestController {
      */
     @RequestMapping(value = "/getStats", method = RequestMethod.POST,
                     produces = "application/json", consumes = "application/json")
-    public @NotNull Response getStatistics(@RequestBody Request request)  {
+    public @NotNull Response getStatistics(@RequestBody Request request) throws WrongResponseInitException {
         String pageLink = request.getLink();
         String postsAmount = request.getPosts();
 
-        // TODO : replace with static call
         try {
             ManagerVK vk = new ManagerVK(pageLink, postsAmount);
-            Response response = new Response(OK, vk.getStatistics());
+            Response response = new Response(vk.getStatistics());
+
             return response;
-            // TODO: cosmetic fix
         } catch (InvalidPageLinkException exception) {
             exception.printStackTrace();
-            return new Response(INVALID_LINK, null);
+            return new Response(INVALID_LINK);
         } catch (InvalidAmountException exception) {
             exception.printStackTrace();
-            return new Response(INVALID_AMOUNT, null);
+            return new Response(INVALID_AMOUNT);
         } catch (EmptyLinkException exception) {
             exception.printStackTrace();
-            return new Response(EMPTY_LINK, null);
+            return new Response(EMPTY_LINK);
         } catch (Exception exception) {
             exception.printStackTrace();
-            return new Response(INTERNAL_ERROR, null);
+            return new Response(INTERNAL_ERROR);
         }
     }
 

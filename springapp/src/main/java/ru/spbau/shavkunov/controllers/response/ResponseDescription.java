@@ -23,7 +23,6 @@ public class ResponseDescription {
     public ResponseDescription(@NotNull String value) {
         this.description = value;
 
-        // TODO : replace with more appropriate code.
         if (description.equals(INVALID_AMOUNT)) {
             type = ErrorType.AMOUNT;
         }
