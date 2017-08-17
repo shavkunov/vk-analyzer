@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import java.net.URL;
 
 /**
- * A community wrap.
+ * A vk group wrap.
  * See https://vk.com/dev/fields_groups.
  */
 @Entity

@@ -77,7 +77,7 @@ public class VkRequest {
             Map information = (Map) ((List) groupResponse.get("response")).get(0);
             Integer groupID = (Integer) information.get("id");
             String groupName = (String) information.get("name");
-            String photoURL = (String) information.get("photo_100");
+            String photoURL = (String) information.get("photo_200");
             String userLink = VK_PREFIX + user;
             return new Group(groupName, groupID.toString(), new URL(photoURL), userLink);
         }

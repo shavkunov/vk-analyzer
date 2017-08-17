@@ -39,7 +39,7 @@ public class ManagerVK {
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
     public ManagerVK(@NotNull String link, @NotNull String requestAmount) throws InvalidAmountException, InvalidPageLinkException, EmptyLinkException {
-        logger.debug("Manager init");
+        logger.debug("Created new manager____________________________________");
         if (link.equals("")) {
             logger.debug("The link is empty");
             throw new EmptyLinkException();
@@ -115,9 +115,9 @@ public class ManagerVK {
             userID = link;
         }
 
-        logger.debug("Trying to check existence of vk user: {}", userID + VK_PREFIX);
+        logger.debug("Trying to check existence of vk user: {}", VK_PREFIX + userID);
         try {
-            URL request = new URL(userID + VK_PREFIX);
+            URL request = new URL(VK_PREFIX + userID);
             HttpURLConnection connection = (HttpURLConnection) request.openConnection();
 
             if (connection.getResponseCode() == 404) {

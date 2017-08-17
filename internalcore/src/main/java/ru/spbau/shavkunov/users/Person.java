@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import java.net.URL;
 
 /**
- * A person wrap.
+ * A single vk user wrap.
  * See https://vk.com/dev/fields.
  */
 @Entity
