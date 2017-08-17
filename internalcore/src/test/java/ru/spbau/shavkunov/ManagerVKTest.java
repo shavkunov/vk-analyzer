@@ -3,6 +3,9 @@ package ru.spbau.shavkunov;
 import org.boon.json.JsonFactory;
 import org.boon.json.ObjectMapper;
 import org.junit.Test;
+import ru.spbau.shavkunov.exceptions.EmptyLinkException;
+import ru.spbau.shavkunov.exceptions.InvalidAmountException;
+import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
 import ru.spbau.shavkunov.primitives.Post;
 import ru.spbau.shavkunov.primitives.Statistics;
 
@@ -83,5 +86,12 @@ public class ManagerVKTest {
         DecimalFormat df = new DecimalFormat("#.###");
         String answer = df.format(value).replace(',', '.');
         System.out.println(Double.parseDouble(answer));
+    }
+
+    @Test
+    public void testLinks() throws EmptyLinkException, InvalidPageLinkException, InvalidAmountException {
+        ManagerVK vk = new ManagerVK("vk.com/alfabank", "50");
+
+
     }
 }
