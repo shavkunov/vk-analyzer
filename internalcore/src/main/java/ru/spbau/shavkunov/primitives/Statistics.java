@@ -2,6 +2,8 @@ package ru.spbau.shavkunov.primitives;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.spbau.shavkunov.users.User;
 
 import javax.persistence.Entity;
@@ -22,6 +24,8 @@ import static ru.spbau.shavkunov.primitives.PostQuantity.*;
  */
 @Entity
 public class Statistics implements Serializable {
+    private static final @NotNull Logger logger = LoggerFactory.getLogger(Statistics.class);
+
     @Id
     private @Nullable String id;
 
@@ -52,6 +56,7 @@ public class Statistics implements Serializable {
     private int amount;
 
     public Statistics(@NotNull User owner, @NotNull List<Map> jsonObjects, int amount) throws IOException {
+        logger.debug("Init stats");
         countAverageLikes(jsonObjects);
         countAverageReposts(jsonObjects);
         countAverageViews(jsonObjects);
@@ -65,10 +70,14 @@ public class Statistics implements Serializable {
         worseViewsPost = getWorseViewsPost(owner, jsonObjects);
         this.owner = owner;
         this.amount = amount;
+        logger.debug("Stats initialized");
     }
 
     private @NotNull Post findQuantityPost(@NotNull PostIdentity identifier, @NotNull User owner,
                                   @NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) throws IOException {
+
+        logger.debug("find quantity post by quantity: {} and post identity: {} of user: {}",
+                        quantity, identifier, owner.getName());
 
         int compareUnit = 1;
         if (identifier == WORST) {
@@ -81,6 +90,7 @@ public class Statistics implements Serializable {
                                   .get();
 
         PostCategory category = PostCategory.getCategory(identifier, quantity);
+        logger.debug("Post category: {}", category);
         return new Post(owner, jsonPost, category);
     }
 
@@ -125,16 +135,21 @@ public class Statistics implements Serializable {
     }
 
     private double countAverageQuantity(@NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
+        logger.debug("count average quantity: {}", quantity);
         double answer = jsonObjects.stream()
                                    .map(map -> (Map) map.get(quantity.toString()))
                                    .mapToInt(map -> (Integer) map.get("count"))
                                    .mapToDouble(input -> (double) input)
                                    .average()
                                    .getAsDouble();
+        logger.debug("answer: {}", answer);
 
         DecimalFormat df = new DecimalFormat("#.###");
         String stringAnswer = df.format(answer).replace(',', '.');
-        return Double.valueOf(stringAnswer);
+        double value = Double.valueOf(stringAnswer);
+        logger.debug("3 precision format: {}", value);
+
+        return value;
     }
 
     public double getAverageViews() {
