@@ -61,21 +61,23 @@ class StartForm extends React.Component {
             });
 
             return;
-        } else {
-            this.setState({
-                linkError: null,
-            });
         }
 
         if (errorDescription.type === "AMOUNT") {
             this.setState({
                 postsError: errorDescription.description
             });
-        } else {
-            this.setState({
-                postsError: null,
-            });
         }
+    };
+
+    showOffErrors = () => {
+        this.setState({
+            linkError: null,
+        });
+
+        this.setState({
+            postsError: null,
+        });
     };
 
     /**
@@ -92,6 +94,7 @@ class StartForm extends React.Component {
         let handleError = this.showError;
         let handleTable = this.props.handleSubmit;
         let stopLoad = this.props.stopLoad;
+        let showOffErrors = this.showOffErrors();
         this.props.beginLoad();
         $.ajax({
             type: "POST",
@@ -106,6 +109,7 @@ class StartForm extends React.Component {
                     return;
                 }
 
+                showOffErrors();
                 let table = response.data;
                 handleTable(table);
             }
