@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -48,11 +49,14 @@ public class ManagerVK {
      * @throws InvalidAmountException throws if amount doesn't satisfy the condition.
      */
     public ManagerVK(@NotNull String link, @NotNull String requestAmount) throws InvalidAmountException, InvalidPageLinkException, EmptyLinkException {
+        logger.debug("Manager init");
         if (link.equals("")) {
+            logger.debug("The link is empty");
             throw new EmptyLinkException();
         }
 
         if (!validateVkLink(link)) {
+            logger.debug("Link is invalid");
             throw new InvalidPageLinkException();
         }
 
@@ -60,14 +64,17 @@ public class ManagerVK {
         try {
             amount = Integer.valueOf(requestAmount);
         } catch (Exception e) {
+            logger.debug("Amount is not a number: {}", requestAmount);
             throw new InvalidAmountException();
         }
 
         if (amount < 10 || amount > 80) {
+            logger.debug("Amount don't fit the condition. Amount: {}", amount);
             throw new InvalidAmountException();
         }
 
         this.amount = amount;
+        logger.debug("Validation succeeded");
     }
 
     // These two methods: getStatistics and identify don't check whether there are some problems with connection.
@@ -156,36 +163,45 @@ public class ManagerVK {
     }
 
     private boolean isVkLink(@NotNull String link) {
+        logger.debug("Is link {} a vk link?", link);
         if (link.startsWith(VK_PREFIX)) {
+            logger.debug("Link started with {} and it's correct", VK_PREFIX);
             userID = link.replaceFirst("^" + VK_PREFIX, "");
             return true;
         }
 
         if (link.startsWith(VK_PREFIX_NO_PROTOCOL)) {
+            logger.debug("Link started with {} and it's correct", VK_PREFIX_NO_PROTOCOL);
             userID = link.replaceFirst("^" + VK_PREFIX_NO_PROTOCOL, "");
             return true;
         }
 
+        logger.debug("Link isn't a vk link");
         return false;
     }
 
     private boolean validateVkLink(@NotNull String link) {
+        logger.debug("Validating link: {}", link);
         if (!isVkLink(link)) {
             userID = link;
             link = VK_PREFIX + link;
         }
 
+        logger.debug("Trying to check existence of vk user: {}", link);
         try {
             URL request = new URL(link);
             HttpURLConnection connection = (HttpURLConnection) request.openConnection();
 
             if (connection.getResponseCode() == 404) {
+                logger.debug("This user doesn't exist");
                 return false;
             }
         } catch (Exception e) {
+            logger.debug(Arrays.toString(e.getStackTrace()));
             return false;
         }
 
+        logger.debug("Link confirmed");
         return true;
     }
 }
