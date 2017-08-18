@@ -71,6 +71,8 @@ class StartForm extends React.Component {
     };
 
     showOffErrors = () => {
+        console.log("no errors");
+
         this.setState({
             linkError: null,
         });
@@ -94,8 +96,9 @@ class StartForm extends React.Component {
         let handleError = this.showError;
         let handleTable = this.props.handleSubmit;
         let stopLoad = this.props.stopLoad;
-        let showOffErrors = this.showOffErrors();
+        let showOffErrors = this.showOffErrors;
         this.props.beginLoad();
+
         $.ajax({
             type: "POST",
             url: requestUrl,

@@ -1,10 +1,10 @@
-#/bin/bash
+#!/bin/bash
 
 mvn clean
-rm -rf springapp/src/main/resources/static/built
+rm -rf spring-app/src/main/resources/static/built
 mvn install
 
-cd springapp
+cd spring-app
 webpack
 
 mvn spring-boot:run

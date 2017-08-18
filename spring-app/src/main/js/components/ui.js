@@ -79,7 +79,6 @@ class UI extends React.Component {
         if (this.state.isTableLoaded) {
             return (
                 <Paper zDepth={4} style={paper} className={css(fadeAnimation.fadeInUp)}>
-
                     <RaisedButton onClick={this.saveStats}
                                   label="Add to database"/>
 
