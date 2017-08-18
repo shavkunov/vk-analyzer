@@ -1,5 +1,6 @@
 package ru.spbau.shavkunov.primitives;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -144,12 +145,18 @@ public class Statistics implements Serializable {
                                    .getAsDouble();
         logger.debug("answer: {}", answer);
 
-        DecimalFormat df = new DecimalFormat("#.###");
-        String stringAnswer = df.format(answer).replace(',', '.');
-        double value = Double.valueOf(stringAnswer);
+        double value = getDoubleWithPrecision(answer, 3);
         logger.debug("3 precision format: {}", value);
 
         return value;
+    }
+
+    public static double getDoubleWithPrecision(double value, int precision) {
+        String pattern = StringUtils.repeat("#", precision);
+        DecimalFormat df = new DecimalFormat("#.###");
+        String stringAnswer = df.format(value).replace(',', '.');
+
+        return Double.valueOf(stringAnswer);
     }
 
     public double getAverageViews() {
