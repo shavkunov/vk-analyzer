@@ -1,1 +1,15 @@
 .idea/workspace.xml
+.idea/inspectionProfiles/
+.idea/jsLibraryMappings.xml
+.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_7.xml
+.idea/libraries/Maven__org_apache_logging_log4j_log4j_api_2_8_2.xml
+.idea/libraries/Maven__org_apache_logging_log4j_log4j_core_2_7.xml
+.idea/libraries/Maven__org_apache_logging_log4j_log4j_core_2_8_2.xml
+.idea/libraries/Maven__org_apache_logging_log4j_log4j_slf4j_impl_2_8_2.xml
+derby.log
+internal-core/logs/
+internal-core/target/
+spring-app/derby.log
+spring-app/node_modules/
+spring-app/target/
+spring-app/src/main/resources/static/built/
