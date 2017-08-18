@@ -153,7 +153,7 @@ public class Statistics implements Serializable {
 
     public static double getDoubleWithPrecision(double value, int precision) {
         String pattern = StringUtils.repeat("#", precision);
-        DecimalFormat df = new DecimalFormat("#.###");
+        DecimalFormat df = new DecimalFormat("#." + pattern);
         String stringAnswer = df.format(value).replace(',', '.');
 
         return Double.valueOf(stringAnswer);
