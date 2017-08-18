@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,11 @@ public class Statistics implements Serializable {
     }
 
     private @NotNull Integer getQuantityCount(@NotNull PostQuantity quantity, @NotNull Map json) {
-        return (Integer) ((Map) json.get(quantity.toString())).get("count");
+        if (json.containsKey(quantity.toString())) {
+            return (Integer) ((Map) json.get(quantity.toString())).get("count");
+        }
+
+        return 0;
     }
 
     private void countAverageViews(@NotNull List<Map> jsonObjects) {
@@ -137,12 +142,22 @@ public class Statistics implements Serializable {
 
     private double countAverageQuantity(@NotNull PostQuantity quantity, @NotNull List<Map> jsonObjects) {
         logger.debug("count average quantity: {}", quantity);
+
+        Map fakeMap = new HashMap();
+        fakeMap.put("count", 0);
         double answer = jsonObjects.stream()
-                                   .map(map -> (Map) map.get(quantity.toString()))
+                                   .map(map -> {
+                                       if (map.containsKey(quantity.toString())) {
+                                            return (Map) map.get(quantity.toString());
+                                       }
+
+                                       // post too old to have views, so assume that there are no views.
+                                       return fakeMap;
+                                   })
                                    .mapToInt(map -> (Integer) map.get("count"))
                                    .mapToDouble(input -> (double) input)
-                                   .average()
-                                   .getAsDouble();
+                                   .average().orElse(0);
+
         logger.debug("answer: {}", answer);
 
         double value = getDoubleWithPrecision(answer, 3);

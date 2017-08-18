@@ -63,7 +63,12 @@ public class Post {
         text = (String) json.get("text");
         likes = (int) ((Map) json.get(LIKES.toString())).get("count");
         reposts = (int) ((Map) json.get(REPOSTS.toString())).get("count");
-        views = (int) ((Map) json.get(VIEWS.toString())).get("count");
+
+        if (json.containsKey(VIEWS.toString())) {
+            views = (int) ((Map) json.get(VIEWS.toString())).get("count");
+        } else {
+            views = 0;
+        }
         description = category.toString();
         postLink = getPostLink(owner, json);
         logger.debug("Post basic are initialized");
