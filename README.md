@@ -1,5 +1,7 @@
 # VK Analyzer Application
 
+[![Build Status](https://travis-ci.org/shavkunov/vk-analyzer.svg?branch=master)](https://travis-ci.org/shavkunov/vk-analyzer)
+
 ## Description
 
 Application used to analyze wall of VK user or community and 
@@ -10,9 +12,9 @@ save results to internal database.
 In command line: 
 
 
-* git clone https://github.com/shavkunov/vk-analyzer
-* cd vk-analyzer
-* ./launch.sh
+* `git clone https://github.com/shavkunov/vk-analyzer`
+* `cd vk-analyzer`
+* `./launch.sh`
 
 These lines will compile resources and launches localhost.
 
