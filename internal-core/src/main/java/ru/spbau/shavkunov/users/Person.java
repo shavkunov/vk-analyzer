@@ -22,8 +22,9 @@ public class Person extends User {
         this.link = userLink;
     }
 
-    public String getSurname() {
-        return surname;
+    @Override
+    public @NotNull String getName() {
+        return name + " " + surname;
     }
 
     @Override
