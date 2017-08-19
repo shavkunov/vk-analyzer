@@ -15,6 +15,8 @@ public class ResponseDescription {
     public static final @NotNull String INVALID_AMOUNT = "Invalid amount. Please, set from 10 to 80";
     public static final @NotNull String INVALID_LINK = "Invalid page link";
     public static final @NotNull String EMPTY_LINK = "Please, enter link to vk user/community";
+    public static final @NotNull String HIDDEN_WALL = "User hid his wall from accessing from outside";
+    public static final @NotNull String BANNED_USER = "User was deleted or banned";
     public static final @NotNull String INTERNAL_ERROR = "UNKNOWN ERROR";
 
     private @NotNull String description;

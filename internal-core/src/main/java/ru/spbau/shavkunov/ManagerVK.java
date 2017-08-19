@@ -3,10 +3,7 @@ package ru.spbau.shavkunov;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.spbau.shavkunov.exceptions.BadJsonResponseException;
-import ru.spbau.shavkunov.exceptions.EmptyLinkException;
-import ru.spbau.shavkunov.exceptions.InvalidAmountException;
-import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
+import ru.spbau.shavkunov.exceptions.*;
 import ru.spbau.shavkunov.primitives.Statistics;
 import ru.spbau.shavkunov.users.User;
 
@@ -67,7 +64,7 @@ public class ManagerVK {
         logger.debug("Validation succeeded");
     }
 
-    public @NotNull Statistics getStatistics() throws BadJsonResponseException, IOException {
+    public @NotNull Statistics getStatistics() throws BadJsonResponseException, IOException, HiddenWallException, UserBannedOrDeletedException {
         User user = VkRequest.identify(userID);
 
         Map response = VkRequest.getWall(user, amount);
@@ -75,6 +72,18 @@ public class ManagerVK {
             Map objects = (Map) response.get("response");
             // first one always total count
             return new Statistics(user, (List<Map>) objects.get("items"), amount);
+        }
+
+        if (response.containsKey("error")) {
+            Map error = (Map) response.get("error");
+
+            if ((int) error.get("error_code") == 15) {
+                throw new HiddenWallException();
+            }
+
+            if ((int) error.get("error_code") == 18) {
+                throw new UserBannedOrDeletedException();
+            }
         }
 
         throw new BadJsonResponseException();

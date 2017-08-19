@@ -10,9 +10,7 @@ import ru.spbau.shavkunov.ManagerVK;
 import ru.spbau.shavkunov.controllers.response.Request;
 import ru.spbau.shavkunov.controllers.response.Response;
 import ru.spbau.shavkunov.controllers.response.exceptions.WrongResponseInitException;
-import ru.spbau.shavkunov.exceptions.EmptyLinkException;
-import ru.spbau.shavkunov.exceptions.InvalidAmountException;
-import ru.spbau.shavkunov.exceptions.InvalidPageLinkException;
+import ru.spbau.shavkunov.exceptions.*;
 import ru.spbau.shavkunov.primitives.Statistics;
 import ru.spbau.shavkunov.services.DataRepository;
 
@@ -52,6 +50,12 @@ public class RequestController {
         } catch (EmptyLinkException exception) {
             exception.printStackTrace();
             return new Response(EMPTY_LINK);
+        } catch (HiddenWallException exception) {
+            exception.printStackTrace();
+            return new Response(HIDDEN_WALL);
+        } catch (UserBannedOrDeletedException exception) {
+            exception.printStackTrace();
+            return new Response(BANNED_USER);
         } catch (Exception exception) {
             exception.printStackTrace();
             return new Response(INTERNAL_ERROR);
