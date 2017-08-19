@@ -29,7 +29,10 @@ otherwise there is a global error and it's bug.
 Enter link to vk user/community in first form 
 and amount of posts to second form(only from 10 to 80)
 
-Examples of links: "https://vk.com/username", vk.com/username", "username" 
+Examples of links: 
+
+* "https://vk.com/username", vk.com/username", "username" 
+* "https://vk.com/id1", vk.com/id1", "id1" 
 
 They are treated as a same thing.
 
@@ -38,10 +41,3 @@ Click on submit button and see results.
 ## Close
 
 Double ctrl+c will close app.
-
-## Issues
-
-There some problems:
-
-* If user hid his wall application doesn't tell you about that. Just nothing.
-* If user banned or deleted -- same case.
