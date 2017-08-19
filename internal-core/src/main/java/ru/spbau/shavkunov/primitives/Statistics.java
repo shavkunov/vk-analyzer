@@ -147,8 +147,8 @@ public class Statistics implements Serializable {
         fakeMap.put("count", 0);
         double answer = jsonObjects.stream()
                                    .map(map -> {
-                                       if (map.containsKey(quantity.toString())) {
-                                            return (Map) map.get(quantity.toString());
+                                       if (map.containsKey(quantity)) {
+                                            return (Map) map.get(quantity);
                                        }
 
                                        // post too old to have views, so assume that there are no views.
