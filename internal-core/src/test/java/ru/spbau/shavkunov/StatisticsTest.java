@@ -46,13 +46,13 @@ public class StatisticsTest {
 
         Map count1 = mock(Map.class);
         when(count1.get("count")).thenReturn(5);
-        when(entity1.containsKey(likes)).thenReturn(true);
+        when(entity1.containsKey(likes.toString())).thenReturn(true);
         Map count2 = mock(Map.class);
         when(count2.get("count")).thenReturn(3);
-        when(entity2.containsKey(likes)).thenReturn(true);
+        when(entity2.containsKey(likes.toString())).thenReturn(true);
 
-        when(entity1.get(likes)).thenReturn(count1);
-        when(entity2.get(likes)).thenReturn(count2);
+        when(entity1.get(likes.toString())).thenReturn(count1);
+        when(entity2.get(likes.toString())).thenReturn(count2);
 
         double actual = (double) method.invoke(stats, likes, list);
         assertEquals(4.0, actual, 0);

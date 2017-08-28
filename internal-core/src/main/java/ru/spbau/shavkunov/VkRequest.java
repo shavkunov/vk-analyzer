@@ -84,7 +84,7 @@ public class VkRequest {
 
         URL isUserRequest = getRequestUrl(USERS_GET,
                 new Parameter("user_ids", user),
-                new Parameter("fields", "photo_400_orig"),
+                new Parameter("fields", "photo_200"),
                 new Parameter("v", "5.67"));
 
         logger.debug("User request created: {}", isUserRequest.toString());
@@ -96,7 +96,7 @@ public class VkRequest {
             Integer userID = (Integer) information.get("id");
             String firstName = (String) information.get("first_name");
             String lastName = (String) information.get("last_name");
-            String photoURL = (String) information.get("photo_400_orig");
+            String photoURL = (String) information.get("photo_200");
             String userLink = VK_PREFIX + "id" + userID;
             return new Person(firstName, lastName, userID.toString(), new URL(photoURL), userLink);
         }
