@@ -7,6 +7,11 @@
 Application used to analyze wall of VK user or community and 
 save results to internal database.
 
+## Demo
+
+* Check gif(27 mb) demo [here](https://www.dropbox.com/s/bt7fciw9z2dp2kp/demo.gif?dl=0).
+* Or same workflow video(55 mb) [file](https://www.dropbox.com/s/8igvqb7319buvls/demo.mov?dl=0).
+
 ## Install
 
 In command line: 
