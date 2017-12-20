@@ -1,13 +1,9 @@
 pipeline {
 
-    agent {
-        docker {
-            image 'maven:3.5.2-jdk-8-slim'
-        }
-    }
+    agent any
 
     stages {
-        stage('Build') { 
+        stage('build') { 
             steps {
                 sh 'mvn install' 
             }
