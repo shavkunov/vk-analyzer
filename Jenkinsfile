@@ -2,14 +2,14 @@ pipeline {
 
     agent {
         docker {
-            image 'gradle:alpine' 
+            image 'maven:3.5.2-jdk-8-slim'
         }
     }
 
     stages {
         stage('Build') { 
             steps {
-                sh 'gradle build' 
+                sh 'mvn install' 
             }
         }
     }
